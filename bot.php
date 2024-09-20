@@ -12,7 +12,16 @@ if (isset($update["message"])) {
         $response = "Hola, soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
         sendMessage($chat_id, $response, createKeyboard());
     }
-
+    
+    // Responder al comando /end
+    if ($text == "/end" || strtolower($text) == "adios") {
+        $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
+        sendMessage($chat_id, $response);
+    } else {
+        $response = "Tenemos falla al comprender tu mensaje, puedes comunicarte con cs21024@ues.edu.sv, él tratará de atender tu consulta y agregar nuevas funcionalidades al sistema para un mejor servicio.";
+        sendMessage($chat_id, $response);
+    }
+    
     // Manejar la respuesta a los botones
     if (isset($update["callback_query"])) {
         $callback_data = $update["callback_query"]["data"];
@@ -23,6 +32,15 @@ if (isset($update["message"])) {
             sendMessage($chat_id, $response);
         } elseif ($callback_data == "opcion2") {
             $response = "Has seleccionado la Opción 2.";
+            sendMessage($chat_id, $response);
+        } elseif ($callback_data == "opcion3") {
+            $response = "Has seleccionado la Opción 3.";
+            sendMessage($chat_id, $response);
+        } elseif ($callback_data == "opcion4") {
+            $response = "Has seleccionado la Opción 4.";
+            sendMessage($chat_id, $response);
+        } elseif ($callback_data == "opcion5") {
+            $response = "Has seleccionado la Opción 5.";
             sendMessage($chat_id, $response);
         } else {
             $response = "Opción no reconocida.";
@@ -36,8 +54,11 @@ function createKeyboard() {
     return [
         'inline_keyboard' => [
             [
-                ['text' => 'Opción 1', 'callback_data' => 'opcion1'],
-                ['text' => 'Opción 2', 'callback_data' => 'opcion2']
+                ['text' => 'Consulta 1', 'callback_data' => 'opcion1'],
+                ['text' => 'Consulta 2', 'callback_data' => 'opcion2'],
+                ['text' => 'Consulta 3', 'callback_data' => 'opcion3'],
+                ['text' => 'Consulta 4', 'callback_data' => 'opcion4'],
+                ['text' => 'Consulta 5', 'callback_data' => 'opcion5'],
             ]
         ]
     ];
