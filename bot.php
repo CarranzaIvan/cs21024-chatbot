@@ -1,4 +1,4 @@
-<?php// Obtener el contenido del mensaje entrante
+<?php
 // Obtener el contenido del mensaje entrante
 $update = json_decode(file_get_contents('php://input'), true);
 
@@ -105,5 +105,4 @@ function answerCallbackQuery($callback_query_id, $text) {
     ];
     file_get_contents($url . "?" . http_build_query($data));
 }
-
 ?>
