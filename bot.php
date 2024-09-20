@@ -1,4 +1,5 @@
 <?php// Obtener el contenido del mensaje entrante
+// Obtener el contenido del mensaje entrante
 $update = json_decode(file_get_contents('php://input'), true);
 
 // Manejar la respuesta a los botones primero
@@ -8,23 +9,21 @@ if (isset($update["callback_query"])) {
     
     if ($callback_data == "opcion1") {
         $response = "Has seleccionado la Opción 1.";
-        sendMessage($chat_id, $response);
     } elseif ($callback_data == "opcion2") {
         $response = "Has seleccionado la Opción 2.";
-        sendMessage($chat_id, $response);
     } elseif ($callback_data == "opcion3") {
         $response = "Has seleccionado la Opción 3.";
-        sendMessage($chat_id, $response);
     } elseif ($callback_data == "opcion4") {
         $response = "Has seleccionado la Opción 4.";
-        sendMessage($chat_id, $response);
     } elseif ($callback_data == "opcion5") {
         $response = "Has seleccionado la Opción 5.";
-        sendMessage($chat_id, $response);
     } else {
         $response = "Opción no reconocida.";
-        sendMessage($chat_id, $response);
     }
+    
+    sendMessage($chat_id, $response);
+    answerCallbackQuery($update["callback_query"]["id"], "¡Opción seleccionada!");
+
     return; // Salir aquí para evitar procesar mensajes de texto si es un callback
 }
 
@@ -86,6 +85,23 @@ function sendMessage($chat_id, $text, $reply_markup = null) {
         'chat_id' => $chat_id,
         'text' => $text,
         'reply_markup' => json_encode($reply_markup) // Agregar el teclado si existe
+    ];
+    file_get_contents($url . "?" . http_build_query($data));
+}
+
+function answerCallbackQuery($callback_query_id, $text) {
+    $bot_token = getenv('BOT_TOKEN_CS21024');
+    
+    if (!$bot_token) {
+        error_log("Token de bot no encontrado. Asegúrate de que está configurado correctamente.");
+        return;
+    }
+    
+    $url = "https://api.telegram.org/bot$bot_token/answerCallbackQuery";
+    $data = [
+        'callback_query_id' => $callback_query_id,
+        'text' => $text,
+        'show_alert' => false // Cambiar a true si deseas mostrar una alerta
     ];
     file_get_contents($url . "?" . http_build_query($data));
 }
