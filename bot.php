@@ -1,30 +1,7 @@
-<?php
-// Obtener el contenido del mensaje entrante
+<?php// Obtener el contenido del mensaje entrante
 $update = json_decode(file_get_contents('php://input'), true);
 
-// Verificar si hay un mensaje y extraer el chat ID y el texto del mensaje
-if (isset($update["message"])) {
-    $chat_id = $update["message"]["chat"]["id"];
-    $text = $update["message"]["text"];
-
-    // Responder al comando /start o hola
-    if ($text == "/start" || strtolower($text) == "hola") {
-        $response = "Hola, soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
-        sendMessage($chat_id, $response, createKeyboard());
-    } 
-    // Responder al comando /end o adios
-    elseif ($text == "/end" || strtolower($text) == "adios") {
-        $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
-        sendMessage($chat_id, $response);
-    } 
-    // Manejar mensajes no reconocidos
-    else {
-        $response = "Tenemos falla al comprender tu mensaje, puedes comunicarte con cs21024@ues.edu.sv, él tratará de atender tu consulta y agregar nuevas funcionalidades al sistema para un mejor servicio.";
-        sendMessage($chat_id, $response);
-    }
-}
-
-// Manejar la respuesta a los botones
+// Manejar la respuesta a los botones primero
 if (isset($update["callback_query"])) {
     $callback_data = $update["callback_query"]["data"];
     $chat_id = $update["callback_query"]["message"]["chat"]["id"];
@@ -46,6 +23,29 @@ if (isset($update["callback_query"])) {
         sendMessage($chat_id, $response);
     } else {
         $response = "Opción no reconocida.";
+        sendMessage($chat_id, $response);
+    }
+    return; // Salir aquí para evitar procesar mensajes de texto si es un callback
+}
+
+// Verificar si hay un mensaje y extraer el chat ID y el texto del mensaje
+if (isset($update["message"])) {
+    $chat_id = $update["message"]["chat"]["id"];
+    $text = $update["message"]["text"];
+
+    // Responder al comando /start o hola
+    if ($text == "/start" || strtolower($text) == "hola") {
+        $response = "Hola, soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
+        sendMessage($chat_id, $response, createKeyboard());
+    } 
+    // Responder al comando /end o adios
+    elseif ($text == "/end" || strtolower($text) == "adios") {
+        $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
+        sendMessage($chat_id, $response);
+    } 
+    // Manejar mensajes no reconocidos
+    else {
+        $response = "Tenemos falla al comprender tu mensaje, puedes comunicarte con cs21024@ues.edu.sv, él tratará de atender tu consulta y agregar nuevas funcionalidades al sistema para un mejor servicio.";
         sendMessage($chat_id, $response);
     }
 }
