@@ -74,7 +74,7 @@ function createKeyboard() {
 
 // Función para enviar un mensaje a Telegram
 function sendMessage($chat_id, $text, $reply_markup = null) {
-    $bot_token = "7791693312:AAEJmYrdEWyRvcvdY4I4-sNEjnC2r9h6u3k";
+    $bot_token = getenv('BOT_TOKEN_CS21024');
     $url = "https://api.telegram.org/bot$bot_token/sendMessage";
     $data = [
         'chat_id' => $chat_id,
