@@ -54,11 +54,19 @@ function createKeyboard() {
     return [
         'inline_keyboard' => [
             [
-                ['text' => 'Consulta 1', 'callback_data' => 'opcion1'],
-                ['text' => 'Consulta 2', 'callback_data' => 'opcion2'],
-                ['text' => 'Consulta 3', 'callback_data' => 'opcion3'],
-                ['text' => 'Consulta 4', 'callback_data' => 'opcion4'],
-                ['text' => 'Consulta 5', 'callback_data' => 'opcion5'],
+                ['text' => 'Consulta 1', 'callback_data' => 'opcion1']
+            ],
+            [
+                ['text' => 'Consulta 2', 'callback_data' => 'opcion2']
+            ],
+            [
+                ['text' => 'Consulta 3', 'callback_data' => 'opcion3']
+            ],
+            [
+                ['text' => 'Consulta 4', 'callback_data' => 'opcion4']
+            ],
+            [
+                ['text' => 'Consulta 5', 'callback_data' => 'opcion5']
             ]
         ]
     ];
