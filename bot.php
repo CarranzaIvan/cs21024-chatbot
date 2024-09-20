@@ -11,17 +11,18 @@ if (isset($update["message"])) {
     if ($text == "/start" || strtolower($text) == "hola") {
         $response = "Hola, soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
         sendMessage($chat_id, $response, createKeyboard());
-    }
-    
+    } 
     // Responder al comando /end
-    if ($text == "/end" || strtolower($text) == "adios") {
+    elseif ($text == "/end" || strtolower($text) == "adios") {
         $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
         sendMessage($chat_id, $response);
-    } else {
+    } 
+    // Manejar mensajes no reconocidos
+    else {
         $response = "Tenemos falla al comprender tu mensaje, puedes comunicarte con cs21024@ues.edu.sv, él tratará de atender tu consulta y agregar nuevas funcionalidades al sistema para un mejor servicio.";
         sendMessage($chat_id, $response);
     }
-    
+
     // Manejar la respuesta a los botones
     if (isset($update["callback_query"])) {
         $callback_data = $update["callback_query"]["data"];
@@ -72,9 +73,14 @@ function createKeyboard() {
     ];
 }
 
-// Función para enviar un mensaje a Telegram
 function sendMessage($chat_id, $text, $reply_markup = null) {
     $bot_token = getenv('BOT_TOKEN_CS21024');
+    
+    if (!$bot_token) {
+        error_log("Token de bot no encontrado. Asegúrate de que está configurado correctamente.");
+        return;
+    }
+    
     $url = "https://api.telegram.org/bot$bot_token/sendMessage";
     $data = [
         'chat_id' => $chat_id,
@@ -83,4 +89,6 @@ function sendMessage($chat_id, $text, $reply_markup = null) {
     ];
     file_get_contents($url . "?" . http_build_query($data));
 }
+
+
 ?>
