@@ -7,12 +7,12 @@ if (isset($update["message"])) {
     $chat_id = $update["message"]["chat"]["id"];
     $text = $update["message"]["text"];
 
-    // Responder al comando /start
+    // Responder al comando /start o hola
     if ($text == "/start" || strtolower($text) == "hola") {
         $response = "Hola, soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
         sendMessage($chat_id, $response, createKeyboard());
     } 
-    // Responder al comando /end
+    // Responder al comando /end o adios
     elseif ($text == "/end" || strtolower($text) == "adios") {
         $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
         sendMessage($chat_id, $response);
@@ -22,31 +22,31 @@ if (isset($update["message"])) {
         $response = "Tenemos falla al comprender tu mensaje, puedes comunicarte con cs21024@ues.edu.sv, él tratará de atender tu consulta y agregar nuevas funcionalidades al sistema para un mejor servicio.";
         sendMessage($chat_id, $response);
     }
+}
 
-    // Manejar la respuesta a los botones
-    if (isset($update["callback_query"])) {
-        $callback_data = $update["callback_query"]["data"];
-        $chat_id = $update["callback_query"]["message"]["chat"]["id"];
-        
-        if ($callback_data == "opcion1") {
-            $response = "Has seleccionado la Opción 1.";
-            sendMessage($chat_id, $response);
-        } elseif ($callback_data == "opcion2") {
-            $response = "Has seleccionado la Opción 2.";
-            sendMessage($chat_id, $response);
-        } elseif ($callback_data == "opcion3") {
-            $response = "Has seleccionado la Opción 3.";
-            sendMessage($chat_id, $response);
-        } elseif ($callback_data == "opcion4") {
-            $response = "Has seleccionado la Opción 4.";
-            sendMessage($chat_id, $response);
-        } elseif ($callback_data == "opcion5") {
-            $response = "Has seleccionado la Opción 5.";
-            sendMessage($chat_id, $response);
-        } else {
-            $response = "Opción no reconocida.";
-            sendMessage($chat_id, $response);
-        }
+// Manejar la respuesta a los botones
+if (isset($update["callback_query"])) {
+    $callback_data = $update["callback_query"]["data"];
+    $chat_id = $update["callback_query"]["message"]["chat"]["id"];
+    
+    if ($callback_data == "opcion1") {
+        $response = "Has seleccionado la Opción 1.";
+        sendMessage($chat_id, $response);
+    } elseif ($callback_data == "opcion2") {
+        $response = "Has seleccionado la Opción 2.";
+        sendMessage($chat_id, $response);
+    } elseif ($callback_data == "opcion3") {
+        $response = "Has seleccionado la Opción 3.";
+        sendMessage($chat_id, $response);
+    } elseif ($callback_data == "opcion4") {
+        $response = "Has seleccionado la Opción 4.";
+        sendMessage($chat_id, $response);
+    } elseif ($callback_data == "opcion5") {
+        $response = "Has seleccionado la Opción 5.";
+        sendMessage($chat_id, $response);
+    } else {
+        $response = "Opción no reconocida.";
+        sendMessage($chat_id, $response);
     }
 }
 
@@ -89,6 +89,5 @@ function sendMessage($chat_id, $text, $reply_markup = null) {
     ];
     file_get_contents($url . "?" . http_build_query($data));
 }
-
 
 ?>
