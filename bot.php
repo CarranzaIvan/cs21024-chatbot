@@ -8,14 +8,14 @@ $text = $update["message"]["text"];
 
 // Responder al comando /start
 if ($text == "/start") {
-    $response = "Probando conexion";
+    $response = "Probando conexion 2";
     sendMessage($chat_id, $response);
 }
 
 // Función para enviar un mensaje a Telegram
 function sendMessage($chat_id, $text) {
     $bot_token = "7791693312:AAEJmYrdEWyRvcvdY4I4-sNEjnC2r9h6u3k";
-    $url = "https://api.telegram.org/bot$bot_token/sendMessage";
+    $url = "https://api.telegram.org/bot7791693312:AAEJmYrdEWyRvcvdY4I4-sNEjnC2r9h6u3k/sendMessage";
     $data = [
         'chat_id' => $chat_id,
         'text' => $text,
