@@ -1,4 +1,5 @@
 <?php
+<?php
 // ----- EVITAMOS ERRORES EN PRODUCCIÓN. -----
 error_reporting(E_ALL & ~E_NOTICE);
 
@@ -8,7 +9,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 header("Pragma: no-cache");
 header("Access-Control-Allow-Origin: *");
 
-// ---- FUNCIÓN DE ENVIO DE FOTOS ---
+// ---- FUNCIÓN DE ENVÍO DE FOTOS ----
 function sendPhoto($chat_id, $photoPath, $caption = '') {
     $bot_token = getenv('BOT_TOKEN_CS21024'); 
     
@@ -48,7 +49,7 @@ function sendPhoto($chat_id, $photoPath, $caption = '') {
     curl_close($ch);
 }
 
-// ----- FUNCIÓN: ENVÍO DE MENSAJES A USUARIO. -----
+// ----- FUNCIÓN: ENVÍO DE MENSAJES A USUARIO -----
 function sendMessage($chat_id, $text, $k = '') {
     $bot_token = getenv('BOT_TOKEN_CS21024'); 
     
@@ -90,7 +91,7 @@ $input = file_get_contents('php://input');
 if ($input) {
     $msgRecibido = json_decode($input, true);
 
-    // CAPTURA DE MENSAJES ESCRITOR - INICIALES
+    // CAPTURA DE MENSAJES ESCRITOS
     if (isset($msgRecibido["message"])) {
         $chat_id = $msgRecibido["message"]["chat"]["id"];
         $first_name = $msgRecibido["message"]["from"]["first_name"];
@@ -117,7 +118,7 @@ if ($input) {
 
         // Respuesta a "/humano"
         elseif ($text == "/humano" || str_contains($text, "humano")) {
-            $response = "¿Puedes seleccionar la compañia la cual te esta proporcionando servicios de Internet?";
+            $response = "¿Puedes seleccionar la compañia la cual te está proporcionando servicios de Internet?";
             // Creación de teclado inline
             $keyboard = [
                 [
@@ -147,8 +148,8 @@ if ($input) {
             sendMessage($chat_id, $response);
         }
 
-        // Respuesta a "adios", "/end" o "salu"
-        elseif ($text == "/end" || $text == "adios" || str_contains($text, "salir") || str_contains($text, "adios") || str_contains($text, "salu")) {
+        // Respuesta a "adios", "/end" o "salir"
+        elseif ($text == "/end" || $text == "adios" || str_contains($text, "salir") || str_contains($text, "adios")) {
             $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
             sendMessage($chat_id, $response);
         }
@@ -159,7 +160,6 @@ if ($input) {
         $bot_token = getenv('BOT_TOKEN_CS21024'); // Obtén el token aquí para usarlo luego
 
         $chat_id = $msgRecibido['callback_query']['message']['chat']['id'];
-        $first_name = $msgRecibido['callback_query']['message']["first_name"];
         $callback_id = $msgRecibido['callback_query']['id'];  // Capturamos el ID de la consulta
         $callback_data = $msgRecibido['callback_query']['data'];
 
@@ -175,7 +175,6 @@ if ($input) {
         switch ($callback_data) {
             case 'no_internet':
                 $response = "¿Tienes encendido tu router?";
-                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
                 $keyboard = [
                     [
                         ['text' => 'Sí ✅', 'callback_data' => 'router_on'],
@@ -188,104 +187,35 @@ if ($input) {
                 ];
                 $key = ['inline_keyboard' => $keyboard];
                 $k = json_encode($key);
-                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
+                sendMessage($chat_id, $response, $k);
                 break;
+                
             case 'fallas_internet':
                 sendMessage($chat_id, "Describe las fallas que estás experimentando.", $clear_keyboard);
                 break;
+                
             case 'verificar_factura':
                 sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.", $clear_keyboard);
                 break;
+                
             case 'salir':
                 $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
                 sendMessage($chat_id, $response, $clear_keyboard);
                 break;
+
             case 'router_on':
                 sendMessage($chat_id, "¡Perfecto! Ahora verifica si tienes conexión a Internet.", $clear_keyboard);
-                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
-                $keyboard = [
-                    [
-                        ['text' => 'Sí ✅', 'callback_data' => 'salir'],
-                        ['text' => 'No ❌', 'callback_data' => 'next_router'],
-                    ],
-                    [
-                        ['text' => 'Volver', 'callback_data' => 'volver'],
-                        ['text' => 'Salir', 'callback_data' => 'salir'],
-                    ]
-                ];
-                $key = ['inline_keyboard' => $keyboard];
-                $k = json_encode($key);
-                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
 
             case 'router_off':
                 sendMessage($chat_id, "Por favor, enciende tu router y verifica de nuevo.", $clear_keyboard);
                 $photo = "./Recursos/router-modem-on.png"; // Asegúrate de que esta ruta es correcta
-                $indicaciones = "PASOS PARA ENCENDER EL ROUTER/MODEN\n
-                                1. Enchufa el router a la energia electrica y enciéndelo. 
-                                2. Asegúrate de que las luces indicadoras estén encendidas (ver imagen superior de referencia).\n
-                                3. Busca la red Wi-Fi predeterminada en tu dispositivo (el nombre y la contraseña están en la etiqueta del router) o fueron proporcionados por tu proveedor de servicios.\n"
-                sendPhoto($chat_id, $photo, $indicaciones);
-                $response = "¿Tu problema ha sido solucionado?";
-                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
-                $keyboard = [
-                    [
-                        ['text' => 'Sí ✅', 'callback_data' => 'salir'],
-                        ['text' => 'No ❌', 'callback_data' => 'next_router'],
-                    ],
-                    [
-                        ['text' => 'Volver', 'callback_data' => 'volver'],
-                        ['text' => 'Salir', 'callback_data' => 'salir'],
-                    ]
-                ];
-                $key = ['inline_keyboard' => $keyboard];
-                $k = json_encode($key);
-                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
-                break;
-            case 'next_router':
-                sendMessage($chat_id, "¿Tiene encendido el WI-FI de tu dispositivo?", $clear_keyboard);
-                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
-                $keyboard = [
-                    [
-                        ['text' => 'Sí ✅', 'callback_data' => 'wifi_on'],
-                        ['text' => 'No ❌', 'callback_data' => 'wifi_off'],
-                    ],
-                    [
-                        ['text' => 'Volver', 'callback_data' => 'volver'],
-                        ['text' => 'Salir', 'callback_data' => 'salir'],
-                    ]
-                ];
-                $key = ['inline_keyboard' => $keyboard];
-                $k = json_encode($key);
-                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
-                break;
-            case 'wifi_on':
-                sendMessage($chat_id, "¡Perfecto! Ahora verifica si tienes conexión a Internet.", $clear_keyboard);
-                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
-                $keyboard = [
-                    [
-                        ['text' => 'Sí ✅', 'callback_data' => 'salir'],
-                        ['text' => 'No ❌', 'callback_data' => 'next_wifi'],
-                    ],
-                    [
-                        ['text' => 'Volver', 'callback_data' => 'volver'],
-                        ['text' => 'Salir', 'callback_data' => 'salir'],
-                    ]
-                ];
-                $key = ['inline_keyboard' => $keyboard];
-                $k = json_encode($key);
-                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
+                $caption = "Instrucciones para encender el router.";
+                sendPhoto($chat_id, $photo, $caption);
                 break;
 
-            case 'wifi_off':
-                sendMessage($chat_id, "Por favor, enciende el Wi-Fi de tu dispositivo.", $clear_keyboard);
-                break;
-            case 'next_wifi':
-                sendMessage($chat_id, "Vamos a verificar la configuración del router.", $clear_keyboard);
-                break;
             case 'volver':
-                // Regresar al teclado anterior
-                $response = "Hola, " . $first_name . " ¿cómo puedo ayudarte en esta ocasión?";
+                $response = "Selecciona una opción:";
                 $keyboard = [
                     [
                         ['text' => '1. No tengo Internet 🛜', 'callback_data' => 'no_internet'],
@@ -298,30 +228,26 @@ if ($input) {
                 ];
                 $key = ['inline_keyboard' => $keyboard];
                 $k = json_encode($key);
-                sendMessage($chat_id, $response, $k); // Regresar al teclado anterior
+                sendMessage($chat_id, $response, $k);
                 break;
-            // Agregamos atencion a internet
+
             case 'claro':
-                $photo = "./Recursos/logo_Claro.png"; // Asegúrate de que esta ruta es correcta
-                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Claro. Por favor, llama al +503 2250 5555.";
-                sendPhoto($chat_id, $photo, $caption);
+                sendMessage($chat_id, "Contacta con Claro al número: +503 2299-5555.", $clear_keyboard);
                 break;
-            case 'tigo':
-                $photo = "./Recursos/logo_Tigo.png"; // Asegúrate de que esta ruta es correcta
-                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Tigo. Por favor, llama al +503 2207 4000.";
-                sendPhoto($chat_id, $photo, $caption);
-                break;
+
             case 'movistar':
-                $photo = "./Recursos/logo_Movistar.png"; // Asegúrate de que esta ruta es correcta
-                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Telefonica. Por favor, llama al +503 7119-7119.";
-                sendPhoto($chat_id, $photo, $caption);
-                break; 
+                sendMessage($chat_id, "Contacta con Movistar al número: +503 2202-0000.", $clear_keyboard);
+                break;
+
+            case 'tigo':
+                sendMessage($chat_id, "Contacta con Tigo al número: +503 2207-4000.", $clear_keyboard);
+                break;
+
             case 'digicel':
-                $photo = "./Recursos/logo_Digicel.png"; // Asegúrate de que esta ruta es correcta
-                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Digicel. Por favor, llama al +503 2504-3444.";
-                sendPhoto($chat_id, $photo, $caption);
-                break; 
+                sendMessage($chat_id, "Contacta con Digicel al número: +503 2505-5555.", $clear_keyboard);
+                break;
         }
     }
 }
+
 ?>
