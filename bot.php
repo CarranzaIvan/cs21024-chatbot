@@ -241,7 +241,7 @@ if ($input) {
                 sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
             case 'next_router':
-                sendMessage($chat_id, "¿Tiene encendido el WI-FI de tu dispositivo?", $clear_keyboard);
+                $response = "¿Tiene encendido el WI-FI de tu dispositivo?";
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
                 $keyboard = [
                     [
