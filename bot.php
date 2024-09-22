@@ -226,23 +226,25 @@ if ($input) {
 
             // Agregamos atencion a internet
             case 'claro':
-                sendMessage($chat_id, "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Claro. Por favor, llama al +503 2250 5555.", $clear_keyboard);
                 $photo = "./Recursos/logo_Claro.png"; // Asegúrate de que esta ruta es correcta
-                $caption = "Aquí tienes una imagen que te puede ayudar.";
+                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Claro. Por favor, llama al +503 2250 5555.";
                 sendPhoto($chat_id, $photo, $caption);
                 break;
             case 'tigo':
-                sendMessage($chat_id, "Para una atención personalizada, te invitamos a comunicarte con nuestro 
-                equipo de soporte al cliente Tigo. Por favor, llama al +503 2207 4000.", $clear_keyboard);
-                break;   
+                $photo = "./Recursos/logo_Tigo.png"; // Asegúrate de que esta ruta es correcta
+                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Tigo. Por favor, llama al +503 2207 4000.";
+                sendPhoto($chat_id, $photo, $caption);
+                break;
             case 'movistar':
-                sendMessage($chat_id, "Para una atención personalizada, te invitamos a comunicarte con nuestro 
-                equipo de soporte al cliente Telefonica. Por favor, llama al +503 7119-7119.", $clear_keyboard);
-                break;    
+                $photo = "./Recursos/logo_Movistar.png"; // Asegúrate de que esta ruta es correcta
+                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Telefonica. Por favor, llama al +503 7119-7119.";
+                sendPhoto($chat_id, $photo, $caption);
+                break; 
             case 'digicel':
-                sendMessage($chat_id, "Para una atención personalizada, te invitamos a comunicarte con nuestro 
-                equipo de soporte al cliente Digicel. Por favor, llama al +503 2504-3444.", $clear_keyboard);
-                break;   
+                $photo = "./Recursos/logo_Digicel.png"; // Asegúrate de que esta ruta es correcta
+                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Digicel. Por favor, llama al +503 2504-3444.";
+                sendPhoto($chat_id, $photo, $caption);
+                break; 
         }
     }
 }
