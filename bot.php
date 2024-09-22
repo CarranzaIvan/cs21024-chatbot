@@ -202,6 +202,7 @@ if ($input) {
                 break;
             case 'router_on':
                 sendMessage($chat_id, "¡Perfecto! Ahora verifica si tienes conexión a Internet.", $clear_keyboard);
+                $response = "¿Tu problema ha sido solucionado?";
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
                 $keyboard = [
                     [
@@ -217,14 +218,13 @@ if ($input) {
                 $k = json_encode($key);
                 sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
-
             case 'router_off':
                 sendMessage($chat_id, "Por favor, enciende tu router y verifica de nuevo.", $clear_keyboard);
                 $photo = "./Recursos/router-modem-on.png"; // Asegúrate de que esta ruta es correcta
-                $indicaciones = "PASOS PARA ENCENDER EL ROUTER/MODEM\n
-                1. Enchufa el router a la energia electrica y enciéndelo.\n 
-                2. Asegúrate de que las luces indicadoras estén encendidas (ver imagen superior de referencia).\n
-                3. Busca la red Wi-Fi predeterminada en tu dispositivo (el nombre y la contraseña están en la etiqueta del router) o fueron proporcionados por tu proveedor de servicios.";
+                $indicaciones = "PASOS PARA ENCENDER EL ROUTER/MODEM\n".
+                "1. Enchufa el router a la energia electrica y enciéndelo.\n". 
+                "2. Asegúrate de que las luces indicadoras estén encendidas (ver imagen superior de referencia).\n".
+                "3. Busca la red Wi-Fi predeterminada en tu dispositivo (el nombre y la contraseña están en la etiqueta del router) o fueron proporcionados por tu proveedor de servicios.";
                 sendPhoto($chat_id, $photo, $indicaciones);
                 $response = "¿Tu problema ha sido solucionado?";
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
@@ -293,16 +293,16 @@ if ($input) {
                 break;
             case 'telefono_wifi':
                 $photo = "./Recursos/wifi-telefono.jpg"; // Asegúrate de que esta ruta es correcta
-                $indicaciones = "Pasos para encender el Wi-Fi en un teléfono \n
-                1. Desbloquea tu teléfono.\n
-                2. Accede a la pantalla de inicio.\n
-                3. Busca y abre la aplicación de \"Configuración\" (o \"Ajustes\").\n
-                4. Encuentra y selecciona \"Conexiones\" o \"Redes\".\n
-                5. Toca en \"Wi-Fi\".\n
-                6. Activa el interruptor de Wi-Fi (debería cambiar a \"On\" o \"Activado\").\n
-                7. Selecciona tu red Wi-Fi de la lista disponible.\n
-                8. Ingresa la contraseña de la red, si es necesario, y toca \"Conectar\".\n
-                9. Verifica que esté conectado (deberías ver un icono de Wi-Fi en la barra de estado).";
+                $indicaciones = "Pasos para encender el Wi-Fi en un teléfono \n".
+                "1. Desbloquea tu teléfono.\n".
+                "2. Accede a la pantalla de inicio.\n".
+                "3. Busca y abre la aplicación de \"Configuración\" (o \"Ajustes\").\n".
+                "4. Encuentra y selecciona \"Conexiones\" o \"Redes\".\n".
+                "5. Toca en \"Wi-Fi\".\n".
+                "6. Activa el interruptor de Wi-Fi (debería cambiar a \"On\" o \"Activado\").\n".
+                "7. Selecciona tu red Wi-Fi de la lista disponible.\n".
+                "8. Ingresa la contraseña de la red, si es necesario, y toca \"Conectar\".\n".
+                "9. Verifica que esté conectado (deberías ver un icono de Wi-Fi en la barra de estado).";
                 sendPhoto($chat_id, $photo, $indicaciones);
                 $response = "¿Tu problema ha sido solucionado?";
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
