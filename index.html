@@ -3,23 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saludo</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        h1 {
-            color: #333;
-        }
-    </style>
+    <title>NetHelpBot | Inicio</title>
+    <link rel="icon" type="image/png" href="./Recursos/logo_NetHelpBot.png">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Enlace a tu archivo CSS -->
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <h1>Hola</h1>
+    <div class="container text-center my-1">
+        <img src="./Recursos/img_chatbot.jpg" class="chatbot-image img-fluid" alt="Chatbot">
+        <h1 class="display-4"><b>Bienvenido a NetHelpBot</b></h1>
+        <h2 class="lead">Haz clic en el botón para iniciar una conversación en Telegram.</h2>
+        <a href="https://t.me/NetHelpBot_Bot" class="btn btn-danger btn-lg">Ir al Chatbot</a>
+    </div>
+
+    <!-- Burbujas -->
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
 </body>
 </html>

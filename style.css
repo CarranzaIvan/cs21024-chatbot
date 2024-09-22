@@ -1,0 +1,85 @@
+body {
+    overflow: hidden; /* Evita el scroll */
+    position: relative;
+    background-color: #fcfcfc;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+h1 {
+    color: #991515;
+}
+
+
+.chatbot-image {
+    max-width: 300px; /* Ajusta el tamaño máximo de la imagen */
+    height: auto; /* Mantiene la relación de aspecto */
+}
+
+/* Estilos de las burbujas */
+.bubble {
+    position: absolute;
+    bottom: -60px; /* Comienza fuera de la vista */
+    background-color: rgba(255, 42, 42, 0.7); /* Color rojo */
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: rise 5s infinite;
+}
+
+@keyframes rise {
+    0% {
+        bottom: -60px;
+        transform: scale(0.5);
+    }
+    100% {
+        bottom: 100vh;
+        transform: scale(1);
+    }
+}
+
+/* Ajustes para crear múltiples burbujas con diferentes tamaños y tiempos */
+.bubble:nth-child(1) {
+    left: 20%;
+    width: 50px;
+    height: 50px;
+    animation-duration: 6s;
+    animation-delay: 0s;
+}
+
+.bubble:nth-child(2) {
+    left: 40%;
+    width: 70px;
+    height: 70px;
+    animation-duration: 8s;
+    animation-delay: 2s;
+}
+
+.bubble:nth-child(3) {
+    left: 60%;
+    width: 40px;
+    height: 40px;
+    animation-duration: 5s;
+    animation-delay: 1s;
+}
+
+.bubble:nth-child(4) {
+    left: 80%;
+    width: 60px;
+    height: 60px;
+    animation-duration: 7s;
+    animation-delay: 3s;
+}
+
+.bubble:nth-child(5) {
+    left: 30%;
+    width: 80px;
+    height: 80px;
+    animation-duration: 9s;
+    animation-delay: 4s;
+}
