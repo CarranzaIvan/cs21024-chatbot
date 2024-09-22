@@ -34,13 +34,13 @@ function sendMessage($chat_id, $text) {
 
 // CAPTURA DE INFORMACION DE CHAT
 $msgRecibido = json_decode(file_get_contents('php://input'), true); // Mensaje actualizado.
-$mensaje = $msgRecibido['message'];           //Filtrado del contenido del mensaje.
-$id_chat = $mensaje["from"]["id"];            //Filtrado del identificador de chat.
-$first_name = $mensaje["from"]["first_name"]; //Filtrado del nombre del usuario.
-$textRecibido = $mensaje["text"];             //Filtrado del mensaje recibido.
 
 // CAPTURA DE MENSAJES
-if (isset($text)) {
+if (isset($msgRecibido["message"])) {
+    $chat_id = $msgRecibido["message"]["chat"]["id"];
+    $first_name = $msgRecibido["message"]["from"]["first_name"]; //Filtrado del nombre del usuario.
+    $text = $msgRecibido["message"]["text"];
+
     if ($text == "/start" || strtolower($text) == "hola" || str_contains("hola", strtolower($text))) {
         $response =  "Hola " .$first_name. ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?"
         sendMessage($chat_id, $response);
