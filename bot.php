@@ -8,6 +8,46 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 header("Pragma: no-cache");
 header("Access-Control-Allow-Origin: *");
 
+// ---- FUNCIÓN DE ENVIO DE FOTOS ---
+function sendPhoto($chat_id, $photoPath, $caption = '') {
+    $bot_token = getenv('BOT_TOKEN_CS21024'); 
+    
+    if (!$bot_token) {
+        error_log("Token de bot no encontrado. Asegúrate de que está configurado correctamente.");
+        return;
+    }
+
+    $url = "https://api.telegram.org/bot$bot_token/sendPhoto";
+
+    $data = [
+        'chat_id' => $chat_id,
+        'caption' => $caption, // Opcional
+        'parse_mode' => 'Markdown' // Habilitamos el modo Markdown
+    ];
+
+    // Usamos CURLFile para enviar un archivo local
+    if (file_exists($photoPath)) {
+        $data['photo'] = new CURLFile($photoPath);
+    } else {
+        error_log("La imagen no se encontró en la ruta especificada: $photoPath");
+        return;
+    }
+
+    // Enviar solicitud usando cURL
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    
+    // Ejecución y manejo de errores
+    $result = curl_exec($ch);
+    if ($result === false) {
+        error_log('Error en la solicitud cURL: ' . curl_error($ch));
+    }
+    
+    curl_close($ch);
+}
+
 // ----- FUNCIÓN: ENVÍO DE MENSAJES A USUARIO. -----
 function sendMessage($chat_id, $text, $k = '') {
     $bot_token = getenv('BOT_TOKEN_CS21024'); 
@@ -74,7 +114,30 @@ if ($input) {
             $k = json_encode($key);
             sendMessage($chat_id, $response, $k);
         }
-        
+
+        // Respuesta a "/humano"
+        elseif ($text == "/humano" || str_contains($text, "humano")) {
+            $response = "¿Puedes seleccionar la compañia la cual te esta proporcionando servicios de Internet?";
+            // Creación de teclado inline
+            $keyboard = [
+                [
+                    ['text' => '1. Claro 🔴', 'callback_data' => 'claro'],
+                    ['text' => '2. Movistar Ⓜ', 'callback_data' => 'movistar'],
+                ],
+                [
+                    ['text' => '3. Tigo 🔵', 'callback_data' => 'tigo'],
+                    ['text' => '4. Digicel ⚪', 'callback_data' => 'movistar'],
+                ],
+                [
+                    ['text' => 'Volver', 'callback_data' => 'volver'],
+                    ['text' => 'Salir', 'callback_data' => 'salir'],
+                ]
+            ];
+            $key = ['inline_keyboard' => $keyboard];
+            $k = json_encode($key);
+            sendMessage($chat_id, $response, $k);
+        }
+
         // Respuesta a "/autor"
         elseif ($text == "/autor" || str_contains($text, "autor")) {
             $response = "El creador de este bot es:\n" .
@@ -96,6 +159,7 @@ if ($input) {
         $bot_token = getenv('BOT_TOKEN_CS21024'); // Obtén el token aquí para usarlo luego
 
         $chat_id = $msgRecibido['callback_query']['message']['chat']['id'];
+        $first_name = $msgRecibido['callback_query']['message']["first_name"];
         $callback_id = $msgRecibido['callback_query']['id'];  // Capturamos el ID de la consulta
         $callback_data = $msgRecibido['callback_query']['data'];
 
@@ -144,7 +208,7 @@ if ($input) {
                 break;
             case 'volver':
                 // Regresar al teclado anterior
-                $response = "Hola, " . $first_name . ", ¿cómo puedo ayudarte en esta ocasión?";
+                $response = "Hola, " . $first_name . " ¿cómo puedo ayudarte en esta ocasión?";
                 $keyboard = [
                     [
                         ['text' => '1. No tengo Internet 🛜', 'callback_data' => 'no_internet'],
@@ -159,6 +223,26 @@ if ($input) {
                 $k = json_encode($key);
                 sendMessage($chat_id, $response, $k); // Regresar al teclado anterior
                 break;
+
+            // Agregamos atencion a internet
+            case 'claro':
+                sendMessage($chat_id, "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Claro. Por favor, llama al +503 2250 5555.", $clear_keyboard);
+                $photo = "./Recursos/logo_Claro.png"; // Asegúrate de que esta ruta es correcta
+                $caption = "Aquí tienes una imagen que te puede ayudar.";
+                sendPhoto($chat_id, $photo, $caption);
+                break;
+            case 'tigo':
+                sendMessage($chat_id, "Para una atención personalizada, te invitamos a comunicarte con nuestro 
+                equipo de soporte al cliente Tigo. Por favor, llama al +503 2207 4000.", $clear_keyboard);
+                break;   
+            case 'movistar':
+                sendMessage($chat_id, "Para una atención personalizada, te invitamos a comunicarte con nuestro 
+                equipo de soporte al cliente Telefonica. Por favor, llama al +503 7119-7119.", $clear_keyboard);
+                break;    
+            case 'digicel':
+                sendMessage($chat_id, "Para una atención personalizada, te invitamos a comunicarte con nuestro 
+                equipo de soporte al cliente Digicel. Por favor, llama al +503 2504-3444.", $clear_keyboard);
+                break;   
         }
     }
 }
