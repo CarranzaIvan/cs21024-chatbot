@@ -260,6 +260,7 @@ if ($input) {
             case 'wifi_on':
                 sendMessage($chat_id, "¡Perfecto! Ahora verifica si tienes conexión a Internet.", $clear_keyboard);
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                $response = "¿Tu problema ha sido solucionado?";
                 $keyboard = [
                     [
                         ['text' => 'Sí ✅', 'callback_data' => 'salir'],
@@ -346,8 +347,8 @@ if ($input) {
                 break;
             case 'next_wifi':
                 // Redirige a la lógica de la respuesta a "/humano"
-                $response = "Parece que tu situación es un poco compleja. Te recomiendo que hables con alguien de fuera para obtener una mejor perspectiva y asesoría.\n
-                ¿Puedes seleccionar la compañia la cual te esta proporcionando servicios de Internet?";
+                $response = "Parece que tu situación es un poco compleja. Te recomiendo que hables con alguien de fuera para obtener una mejor perspectiva y asesoría.\n".
+                ."¿Puedes seleccionar la compañia la cual te esta proporcionando servicios de Internet?";
                 // Creación de teclado inline
                 $keyboard = [
                     [
