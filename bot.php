@@ -1,11 +1,58 @@
 <?php
-// Obtener el contenido del mensaje entrante
-$update = json_decode(file_get_contents('php://input'), true);
+// ----- EVITAMOS ERRORES EN PRODUCCIÓN. -----
+error_reporting(0);
 
-// Manejar la respuesta a los botones primero
-if (isset($update["callback_query"])) {
-    $callback_data = $update["callback_query"]["data"];
-    $chat_id = $update["callback_query"]["message"]["chat"]["id"];
+// ----- EVITAMOS CACHE -----
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Fecha del pasado
+header("Pragma: no-cache");
+header("Access-Control-Allow-Origin: *");
+
+// ----- FUNCIÓN: ENVIO DE MENSAJES A USUARIO. -----
+/*
+    $chat_id: Identificador de chat.
+    $text: Mensaje a enviar.
+*/
+function sendMessage($chat_id, $text) {
+    // Obtenemos token de la variable de entorno BOT_TOKEN_CS21024.
+    $bot_token = getenv('BOT_TOKEN_CS21024'); 
+    
+    //Validación del token.
+    if (!$bot_token) {
+        error_log("Token de bot no encontrado. Asegúrate de que está configurado correctamente.");
+        return;
+    }
+    
+    //Armado de enlace de envio
+    $url = "https://api.telegram.org/bot$bot_token/sendMessage";
+    $data = [
+        'chat_id' => $chat_id,
+        'text' => $text,
+    ];
+    file_get_contents($url . "?" . http_build_query($data));
+}
+
+// CAPTURA DE INFORMACION DE CHAT
+$msgRecibido = json_decode(file_get_contents('php://input'), true); // Mensaje actualizado.
+$mensaje = $msgRecibido['message'];           //Filtrado del contenido del mensaje.
+$id_chat = $mensaje["from"]["id"];            //Filtrado del identificador de chat.
+$first_name = $mensaje["from"]["first_name"]; //Filtrado del nombre del usuario.
+$textRecibido = $mensaje["text"];             //Filtrado del mensaje recibido.
+
+// CAPTURA DE MENSAJES
+if (isset($text)) {
+    if ($text == "/start" || strtolower($text) == "hola" || str_contains("hola", strtolower($text))) {
+        $response =  "Hola " .$first_name. ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?"
+        sendMessage($chat_id, $response);
+    } 
+}
+
+
+
+/*// Manejar la respuesta a los botones primero
+if (isset($msgRecibido["callback_query"])) {
+    $callback_data = $msgRecibido["callback_query"]["data"];
+    $chat_id = $msgRecibido["callback_query"]["message"]["chat"]["id"];
     
     if ($callback_data == "opcion1") {
         $response = "Has seleccionado la Opción 1.";
@@ -22,21 +69,16 @@ if (isset($update["callback_query"])) {
     }
     
     sendMessage($chat_id, $response);
-    answerCallbackQuery($update["callback_query"]["id"], "¡Opción seleccionada!");
+    answerCallbackQuery($msgRecibido["callback_query"]["id"], "¡Opción seleccionada!");
 
     return; // Salir aquí para evitar procesar mensajes de texto si es un callback
 }
 
 // Verificar si hay un mensaje y extraer el chat ID y el texto del mensaje
-if (isset($update["message"])) {
-    $chat_id = $update["message"]["chat"]["id"];
-    $text = $update["message"]["text"];
+if (isset($msgRecibido["message"])) {
+    $chat_id = $msgRecibido["message"]["chat"]["id"];
+    $text = $msgRecibido["message"]["text"];
 
-    // Responder al comando /start o hola
-    if ($text == "/start" || strtolower($text) == "hola") {
-        $response = "Hola, soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
-        sendMessage($chat_id, $response, createKeyboard());
-    } 
     // Responder al comando /end o adios
     elseif ($text == "/end" || strtolower($text) == "adios") {
         $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
@@ -72,22 +114,7 @@ function createKeyboard() {
     ];
 }
 
-function sendMessage($chat_id, $text, $reply_markup = null) {
-    $bot_token = getenv('BOT_TOKEN_CS21024');
-    
-    if (!$bot_token) {
-        error_log("Token de bot no encontrado. Asegúrate de que está configurado correctamente.");
-        return;
-    }
-    
-    $url = "https://api.telegram.org/bot$bot_token/sendMessage";
-    $data = [
-        'chat_id' => $chat_id,
-        'text' => $text,
-        'reply_markup' => json_encode($reply_markup) // Agregar el teclado si existe
-    ];
-    file_get_contents($url . "?" . http_build_query($data));
-}
+
 
 function answerCallbackQuery($callback_query_id, $text) {
     $bot_token = getenv('BOT_TOKEN_CS21024');
@@ -104,5 +131,5 @@ function answerCallbackQuery($callback_query_id, $text) {
         'show_alert' => false // Cambiar a true si deseas mostrar una alerta
     ];
     file_get_contents($url . "?" . http_build_query($data));
-}
+}*/
 ?>
