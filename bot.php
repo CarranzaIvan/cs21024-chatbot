@@ -221,10 +221,10 @@ if ($input) {
             case 'router_off':
                 sendMessage($chat_id, "Por favor, enciende tu router y verifica de nuevo.", $clear_keyboard);
                 $photo = "./Recursos/router-modem-on.png"; // Asegúrate de que esta ruta es correcta
-                $indicaciones = "PASOS PARA ENCENDER EL ROUTER/MODEN\n
-                                1. Enchufa el router a la energia electrica y enciéndelo. 
-                                2. Asegúrate de que las luces indicadoras estén encendidas (ver imagen superior de referencia).\n
-                                3. Busca la red Wi-Fi predeterminada en tu dispositivo (el nombre y la contraseña están en la etiqueta del router) o fueron proporcionados por tu proveedor de servicios.\n";
+                $indicaciones = "PASOS PARA ENCENDER EL ROUTER/MODEM\n
+                1. Enchufa el router a la energia electrica y enciéndelo.\n 
+                2. Asegúrate de que las luces indicadoras estén encendidas (ver imagen superior de referencia).\n
+                3. Busca la red Wi-Fi predeterminada en tu dispositivo (el nombre y la contraseña están en la etiqueta del router) o fueron proporcionados por tu proveedor de servicios.";
                 sendPhoto($chat_id, $photo, $indicaciones);
                 $response = "¿Tu problema ha sido solucionado?";
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
@@ -235,7 +235,6 @@ if ($input) {
                     ],
                     [
                         ['text' => 'Volver', 'callback_data' => 'volver'],
-                        ['text' => 'Salir', 'callback_data' => 'salir'],
                     ]
                 ];
                 $key = ['inline_keyboard' => $keyboard];
@@ -269,23 +268,109 @@ if ($input) {
                     ],
                     [
                         ['text' => 'Volver', 'callback_data' => 'volver'],
-                        ['text' => 'Salir', 'callback_data' => 'salir'],
                     ]
                 ];
                 $key = ['inline_keyboard' => $keyboard];
                 $k = json_encode($key);
                 sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
-
             case 'wifi_off':
-                sendMessage($chat_id, "Por favor, enciende el Wi-Fi de tu dispositivo.", $clear_keyboard);
+                sendMessage($chat_id, "Por favor, enciende tu router y verifica de nuevo.", $clear_keyboard);
+                $response = "¿Cual es tu dispositivo?";
+                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                $keyboard = [
+                    [
+                        ['text' => 'Teléfono Móvil 📱', 'callback_data' => 'telefono_wifi'],
+                        ['text' => 'Computadora 💻', 'callback_data' => 'computadora_wifi'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
+                break;
+            case 'telefono_wifi':
+                $photo = "./Recursos/wifi-telefono.jpg"; // Asegúrate de que esta ruta es correcta
+                $indicaciones = "Pasos para encender el Wi-Fi en un teléfono \n
+                1. Desbloquea tu teléfono.\n
+                2. Accede a la pantalla de inicio.\n
+                3. Busca y abre la aplicación de \"Configuración\" (o \"Ajustes\").\n
+                4. Encuentra y selecciona \"Conexiones\" o \"Redes\".\n
+                5. Toca en \"Wi-Fi\".\n
+                6. Activa el interruptor de Wi-Fi (debería cambiar a \"On\" o \"Activado\").\n
+                7. Selecciona tu red Wi-Fi de la lista disponible.\n
+                8. Ingresa la contraseña de la red, si es necesario, y toca \"Conectar\".\n
+                9. Verifica que esté conectado (deberías ver un icono de Wi-Fi en la barra de estado).";
+                sendPhoto($chat_id, $photo, $indicaciones);
+                $response = "¿Tu problema ha sido solucionado?";
+                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                $keyboard = [
+                    [
+                        ['text' => 'Sí ✅', 'callback_data' => 'salir'],
+                        ['text' => 'No ❌', 'callback_data' => 'next_wifi'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
+                break;
+            case 'computadora_wifi':
+                $photo = "./Recursos/wifi-computadora.jpg"; // Asegúrate de que esta ruta es correcta
+                $indicaciones = "Enciende tu computadora y accede a tu cuenta.
+                1. Haz clic en el icono de red en la esquina inferior derecha de la barra de tareas.
+                2. Asegúrate de que el Wi-Fi esté activado (puedes ver un icono de Wi-Fi).
+                3. Si el Wi-Fi está apagado, haz clic en \"Activar Wi-Fi\".
+                4. Busca las redes disponibles y selecciona tu red Wi-Fi.
+                5. Haz clic en \"Conectar\".
+                6. Ingresa la contraseña de la red, si es necesario.
+                7. Confirma la conexión y verifica que esté conectado (deberías ver el icono de Wi-Fi en la barra de tareas).";
+                sendPhoto($chat_id, $photo, $indicaciones);
+                $response = "¿Tu problema ha sido solucionado?";
+                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                $keyboard = [
+                    [
+                        ['text' => 'Sí ✅', 'callback_data' => 'salir'],
+                        ['text' => 'No ❌', 'callback_data' => 'next_wifi'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
             case 'next_wifi':
-                sendMessage($chat_id, "Vamos a verificar la configuración del router.", $clear_keyboard);
+                // Redirige a la lógica de la respuesta a "/humano"
+                $response = "Parece que tu situación es un poco compleja. Te recomiendo que hables con alguien de fuera para obtener una mejor perspectiva y asesoría.\n
+                ¿Puedes seleccionar la compañia la cual te esta proporcionando servicios de Internet?";
+                // Creación de teclado inline
+                $keyboard = [
+                    [
+                        ['text' => '1. Claro 🔴', 'callback_data' => 'claro'],
+                        ['text' => '2. Movistar Ⓜ', 'callback_data' => 'movistar'],
+                    ],
+                    [
+                        ['text' => '3. Tigo 🔵', 'callback_data' => 'tigo'],
+                        ['text' => '4. Digicel ⚪', 'callback_data' => 'digicel'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                        ['text' => 'Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k);
                 break;
             case 'volver':
                 // Regresar al teclado anterior
-                $response = "Hola, " . $first_name . " ¿cómo puedo ayudarte en esta ocasión?";
+                $response = "Hola, " . $first_name . " ¿Cómo puedo ayudarte en esta ocasión?";
                 $keyboard = [
                     [
                         ['text' => '1. No tengo Internet 🛜', 'callback_data' => 'no_internet'],
