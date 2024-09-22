@@ -74,21 +74,6 @@ if ($input) {
             $k = json_encode($key);
             sendMessage($chat_id, $response, $k);
         }
-
-        
-        // Respuesta a "1. No tengo Internet 🛜."
-        elseif (str_contains($text, "1. No tengo Internet 🛜.")) {
-            $response = "¿Tienes encendido tu router?";
-            $keyboard =  [                
-                ['1. Si ✅',
-                 '2. No ❌',  
-                 '3. Volver', 
-                 '4. Salir'],
-            ];
-            $key = ['one_time_keyboard' => true, 'resize_keyboard' => true, 'keyboard' => $keyboard];
-            $k = json_encode($key);
-            sendMessage($chat_id, $response, $k);
-        }
         
         // Respuesta a "/autor"
         elseif ($text == "/autor" || str_contains($text, "autor")) {
@@ -113,7 +98,15 @@ if ($input) {
         // Manejo de las diferentes respuestas del teclado inline
         switch ($callback_data) {
             case 'no_internet':
-                sendMessage($chat_id, "¿Tienes encendido tu router?");
+                $keyboard =  [                
+                    ['1. Si ✅',
+                     '2. No ❌',  
+                     '3. Volver', 
+                     '4. Salir'],
+                ];
+                $key = ['one_time_keyboard' => true, 'resize_keyboard' => true, 'keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k);
                 break;
             case 'fallas_internet':
                 sendMessage($chat_id, "Describe las fallas que estás experimentando.");
