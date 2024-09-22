@@ -259,27 +259,30 @@ if ($input) {
                 $k = json_encode($key);
                 sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
-                case 'wifi_on':
-                    sendMessage($chat_id, "¡Perfecto! Ahora verifica si tienes conexión a Internet.", $clear_keyboard);
-                    // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
-                    $keyboard = [
-                        [
-                            ['text' => 'Sí ✅', 'callback_data' => 'salir'],
-                            ['text' => 'No ❌', 'callback_data' => 'next_wifi'],
-                        ],
-                        [
-                            ['text' => 'Volver', 'callback_data' => 'volver'],
-                            ['text' => 'Salir', 'callback_data' => 'salir'],
-                        ]
-                    ];
-                    $key = ['inline_keyboard' => $keyboard];
-                    $k = json_encode($key);
-                    sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
-                    break;
-    
-                case 'wifi_off':
+            case 'wifi_on':
+                sendMessage($chat_id, "¡Perfecto! Ahora verifica si tienes conexión a Internet.", $clear_keyboard);
+                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                $keyboard = [
+                    [
+                        ['text' => 'Sí ✅', 'callback_data' => 'salir'],
+                        ['text' => 'No ❌', 'callback_data' => 'next_wifi'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                        ['text' => 'Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
+                break;
 
-                    break;
+            case 'wifi_off':
+                sendMessage($chat_id, "Por favor, enciende el Wi-Fi de tu dispositivo.", $clear_keyboard);
+                break;
+            case 'next_wifi':
+                sendMessage($chat_id, "Vamos a verificar la configuración del router.", $clear_keyboard);
+                break;
             case 'volver':
                 // Regresar al teclado anterior
                 $response = "Hola, " . $first_name . " ¿cómo puedo ayudarte en esta ocasión?";
