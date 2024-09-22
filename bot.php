@@ -9,7 +9,7 @@ header("Pragma: no-cache");
 header("Access-Control-Allow-Origin: *");
 
 // ----- FUNCIÓN: ENVÍO DE MENSAJES A USUARIO. -----
-function sendMessage($chat_id, $text, $k = '', $remove_keyboard = false) {
+function sendMessage($chat_id, $text, $k = '') {
     $bot_token = getenv('BOT_TOKEN_CS21024'); 
     
     if (!$bot_token) {
@@ -25,16 +25,9 @@ function sendMessage($chat_id, $text, $k = '', $remove_keyboard = false) {
         'parse_mode' => 'Markdown' // Habilitamos el modo Markdown
     ];
 
-    // Validación de teclado inline
+    // Validación de teclado
     if (!empty($k)) {
         $data['reply_markup'] = $k;
-    }
-
-    // Deshabilitar el teclado normal
-    if ($remove_keyboard) {
-        $data['reply_markup'] = json_encode([
-            'remove_keyboard' => true
-        ]);
     }
 
     // Enviar solicitud usando cURL
@@ -79,9 +72,7 @@ if ($input) {
             ];
             $key = ['inline_keyboard' => $keyboard];
             $k = json_encode($key);
-            
-            // Enviar mensaje con teclado inline y deshabilitar teclado normal
-            sendMessage($chat_id, $response, $k, true);
+            sendMessage($chat_id, $response, $k);
         }
         
         // Respuesta a "/autor"
@@ -90,13 +81,13 @@ if ($input) {
                         "**Autor:** Iván Alexander Carranza Sánchez.\n" .
                         "**Correo:** cs21024@ues.edu.sv\n" .
                         "**Tel:** +503 6193 4490\n";
-            sendMessage($chat_id, $response, '', true);
+            sendMessage($chat_id, $response);
         }
 
         // Respuesta a "adios", "/end" o "salu"
         elseif ($text == "/end" || $text == "adios" || str_contains($text, "salir") || str_contains($text, "adios") || str_contains($text, "salu")) {
             $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
-            sendMessage($chat_id, $response, '', true);
+            sendMessage($chat_id, $response);
         }
     }
 
@@ -109,7 +100,7 @@ if ($input) {
 
         // Respuesta vacía para eliminar el teclado inline
         $clear_keyboard = json_encode([
-            'inline_keyboard' => []  // Esto elimina el teclado inline
+            'inline_keyboard' => []  // Esto elimina el teclado
         ]);
 
         // Notificar a Telegram que la acción fue recibida (para quitar el "cargando")
@@ -121,17 +112,35 @@ if ($input) {
         switch ($callback_data) {
             case 'no_internet':
                 $response = "¿Tienes encendido tu router?";
-                sendMessage($chat_id, $response, $clear_keyboard, true); // Remover el teclado
+                // Crear un nuevo teclado con opciones "Sí", "No" y "Salir"
+                $keyboard = [
+                    [
+                        ['text' => 'Sí', 'callback_data' => 'router_on'],
+                        ['text' => 'No', 'callback_data' => 'router_off'],
+                    ],
+                    [
+                        ['text' => 'Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
             case 'fallas_internet':
-                sendMessage($chat_id, "Describe las fallas que estás experimentando.", $clear_keyboard, true);
+                sendMessage($chat_id, "Describe las fallas que estás experimentando.", $clear_keyboard);
                 break;
             case 'verificar_factura':
-                sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.", $clear_keyboard, true);
+                sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.", $clear_keyboard);
                 break;
             case 'salir':
                 $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
-                sendMessage($chat_id, $response, $clear_keyboard, true);
+                sendMessage($chat_id, $response, $clear_keyboard);
+                break;
+            case 'router_on':
+                sendMessage($chat_id, "¡Perfecto! Ahora verifica si tienes conexión a Internet.", $clear_keyboard);
+                break;
+            case 'router_off':
+                sendMessage($chat_id, "Por favor, enciende tu router y verifica de nuevo.", $clear_keyboard);
                 break;
         }
     }
