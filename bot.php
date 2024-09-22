@@ -224,7 +224,7 @@ if ($input) {
                 $indicaciones = "PASOS PARA ENCENDER EL ROUTER/MODEN\n
                                 1. Enchufa el router a la energia electrica y enciéndelo. 
                                 2. Asegúrate de que las luces indicadoras estén encendidas (ver imagen superior de referencia).\n
-                                3. Busca la red Wi-Fi predeterminada en tu dispositivo (el nombre y la contraseña están en la etiqueta del router) o fueron proporcionados por tu proveedor de servicios.\n"
+                                3. Busca la red Wi-Fi predeterminada en tu dispositivo (el nombre y la contraseña están en la etiqueta del router) o fueron proporcionados por tu proveedor de servicios.\n";
                 sendPhoto($chat_id, $photo, $indicaciones);
                 $response = "¿Tu problema ha sido solucionado?";
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
