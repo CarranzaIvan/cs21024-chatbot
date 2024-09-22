@@ -21,6 +21,7 @@ function sendMessage($chat_id, $text) {
     $data = [
         'chat_id' => $chat_id,
         'text' => $text,
+        'parse_mode' => 'Markdown' // Habilitamos el modo Markdown
     ];
 
     // Enviar solicitud usando cURL
@@ -54,10 +55,19 @@ if ($input) {
             $response = "Hola " . $first_name . ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
             sendMessage($chat_id, $response);
         }
+        
+        // Respuesta a "autor"
+        elseif ($text == "/autor") {
+            $response = "El creador de este bot es:\n\n" .
+                        "**Autor:** Iván Alexander Carranza Sánchez.\n" . // Texto en negrita
+                        "**Correo:** cs21024@ues.edu.sv\n" . // Texto en negrita
+                        "**Tel:** +503 6193 4490\n"; // Texto en negrita
+            sendMessage($chat_id, $response);
+        }
 
         // Respuesta a "adios", "/end" o "salu"
         elseif ($text == "/end" || $text == "adios" || str_contains($text, "adios") || str_contains($text, "salu")) {
-            $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
+            $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡 .";
             sendMessage($chat_id, $response);
         }
     }
