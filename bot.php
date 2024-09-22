@@ -1,5 +1,4 @@
 <?php
-<?php
 // ----- EVITAMOS ERRORES EN PRODUCCIÓN. -----
 error_reporting(E_ALL & ~E_NOTICE);
 
