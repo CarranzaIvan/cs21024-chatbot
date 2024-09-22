@@ -211,7 +211,6 @@ if ($input) {
                     ],
                     [
                         ['text' => 'Volver', 'callback_data' => 'volver'],
-                        ['text' => 'Salir', 'callback_data' => 'salir'],
                     ]
                 ];
                 $key = ['inline_keyboard' => $keyboard];
