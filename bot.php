@@ -202,10 +202,84 @@ if ($input) {
                 break;
             case 'router_on':
                 sendMessage($chat_id, "¡Perfecto! Ahora verifica si tienes conexión a Internet.", $clear_keyboard);
+                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                $keyboard = [
+                    [
+                        ['text' => 'Sí ✅', 'callback_data' => 'salir'],
+                        ['text' => 'No ❌', 'callback_data' => 'next_router'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                        ['text' => 'Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
+
             case 'router_off':
                 sendMessage($chat_id, "Por favor, enciende tu router y verifica de nuevo.", $clear_keyboard);
+                $photo = "./Recursos/router-modem-on.png"; // Asegúrate de que esta ruta es correcta
+                $indicaciones = "PASOS PARA ENCENDER EL ROUTER/MODEN\n
+                                1. Enchufa el router a la energia electrica y enciéndelo. 
+                                2. Asegúrate de que las luces indicadoras estén encendidas (ver imagen superior de referencia).\n
+                                3. Busca la red Wi-Fi predeterminada en tu dispositivo (el nombre y la contraseña están en la etiqueta del router) o fueron proporcionados por tu proveedor de servicios.\n"
+                sendPhoto($chat_id, $photo, $indicaciones);
+                $response = "¿Tu problema ha sido solucionado?";
+                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                $keyboard = [
+                    [
+                        ['text' => 'Sí ✅', 'callback_data' => 'salir'],
+                        ['text' => 'No ❌', 'callback_data' => 'next_router'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                        ['text' => 'Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
+            case 'next_router':
+                sendMessage($chat_id, "¿Tiene encendido el WI-FI de tu dispositivo?", $clear_keyboard);
+                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                $keyboard = [
+                    [
+                        ['text' => 'Sí ✅', 'callback_data' => 'wifi_on'],
+                        ['text' => 'No ❌', 'callback_data' => 'wifi_off'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                        ['text' => 'Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
+                break;
+                case 'wifi_on':
+                    sendMessage($chat_id, "¡Perfecto! Ahora verifica si tienes conexión a Internet.", $clear_keyboard);
+                    // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                    $keyboard = [
+                        [
+                            ['text' => 'Sí ✅', 'callback_data' => 'salir'],
+                            ['text' => 'No ❌', 'callback_data' => 'next_wifi'],
+                        ],
+                        [
+                            ['text' => 'Volver', 'callback_data' => 'volver'],
+                            ['text' => 'Salir', 'callback_data' => 'salir'],
+                        ]
+                    ];
+                    $key = ['inline_keyboard' => $keyboard];
+                    $k = json_encode($key);
+                    sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
+                    break;
+    
+                case 'wifi_off':
+
+                    break;
             case 'volver':
                 // Regresar al teclado anterior
                 $response = "Hola, " . $first_name . " ¿cómo puedo ayudarte en esta ocasión?";
@@ -223,7 +297,6 @@ if ($input) {
                 $k = json_encode($key);
                 sendMessage($chat_id, $response, $k); // Regresar al teclado anterior
                 break;
-
             // Agregamos atencion a internet
             case 'claro':
                 $photo = "./Recursos/logo_Claro.png"; // Asegúrate de que esta ruta es correcta
