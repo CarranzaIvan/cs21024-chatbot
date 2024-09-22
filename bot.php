@@ -59,19 +59,24 @@ if ($input) {
         // Respuesta a "hola" o "/start"
         if ($text == "/start" || $text == "hola" || str_contains($text, "hola")) {
             $response = "Hola " . $first_name . ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
-            $keyboard =  [                
-                ['1. No tengo Internet 🛜.',
-                 '2. Fallas con el internet ⚡.',  
-                 '3. Verificar factura 💸.', 
-                 '4. Salir'],
+            // Creación de teclado inline
+            $keyboard = [
+                [
+                    ['text' => '1. No tengo Internet 🛜', 'callback_data' => 'no_internet'],
+                    ['text' => '2. Fallas con el Internet ⚡', 'callback_data' => 'fallas_internet'],
+                ],
+                [
+                    ['text' => '3. Verificar Factura 💸', 'callback_data' => 'verificar_factura'],
+                    ['text' => '4. Salir', 'callback_data' => 'salir'],
+                ]
             ];
-            $key = ['one_time_keyboard' => true, 'resize_keyboard' => true, 'keyboard' => $keyboard];
+            $key = ['one_time_keyboard' => true, 'resize_keyboard' => true, 'inline_keyboard' => $keyboard];
             $k = json_encode($key);
             sendMessage($chat_id, $response, $k);
         }
 
         
-        // Respuesta a "/autor"
+        // Respuesta a "1. No tengo Internet 🛜."
         elseif (str_contains($text, "1. No tengo Internet 🛜.")) {
             $response = "¿Tienes encendido tu router?";
             $keyboard =  [                
