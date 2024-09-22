@@ -50,7 +50,7 @@ $input = file_get_contents('php://input');
 if ($input) {
     $msgRecibido = json_decode($input, true);
 
-    // CAPTURA DE MENSAJES
+    // CAPTURA DE MENSAJES ESCRITOR - INICIALES
     if (isset($msgRecibido["message"])) {
         $chat_id = $msgRecibido["message"]["chat"]["id"];
         $first_name = $msgRecibido["message"]["from"]["first_name"];
@@ -91,6 +91,7 @@ if ($input) {
         }
     }
 
+    // CAPTURA DE MENSAJES SELECCIONABLES
     if (isset($msgRecibido['callback_query'])) {
         $bot_token = getenv('BOT_TOKEN_CS21024'); // Obtén el token aquí para usarlo luego
 
@@ -99,9 +100,7 @@ if ($input) {
         $callback_data = $msgRecibido['callback_query']['data'];
 
         // Respuesta vacía para eliminar el teclado inline
-        $clear_keyboard = json_encode([
-            'inline_keyboard' => []  // Esto elimina el teclado
-        ]);
+        $clear_keyboard = json_encode(['inline_keyboard' => []]);
 
         // Notificar a Telegram que la acción fue recibida (para quitar el "cargando")
         $url = "https://api.telegram.org/bot$bot_token/answerCallbackQuery";
@@ -115,8 +114,8 @@ if ($input) {
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
                 $keyboard = [
                     [
-                        ['text' => 'Sí', 'callback_data' => 'router_on'],
-                        ['text' => 'No', 'callback_data' => 'router_off'],
+                        ['text' => 'Sí ✅', 'callback_data' => 'router_on'],
+                        ['text' => 'No ❌', 'callback_data' => 'router_off'],
                     ],
                     [
                         ['text' => 'Volver', 'callback_data' => 'volver'],
