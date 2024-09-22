@@ -8,20 +8,32 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 header("Pragma: no-cache");
 header("Access-Control-Allow-Origin: *");
 
-// ----- FUNCIÓN: ENVÍO DE MENSAJES A USUARIO. -----
-function sendMessage($chat_id, $text) {
+// ----- FUNCIÓN: ENVÍO DE MENSAJES A USUARIO CON TECLADO PERSONALIZADO -----
+function sendMessageWithKeyboard($chat_id, $text) {
     $bot_token = getenv('BOT_TOKEN_CS21024'); 
-    
+
     if (!$bot_token) {
         error_log("Token de bot no encontrado. Asegúrate de que está configurado correctamente.");
         return;
     }
 
     $url = "https://api.telegram.org/bot$bot_token/sendMessage";
+    
+    // Definir el teclado personalizado
+    $keyboard = [
+        'keyboard' => [
+            [['text' => '/autor'], ['text' => '/help']],
+            [['text' => '/end'], ['text' => '/contacto']]
+        ],
+        'resize_keyboard' => true, // Ajustar el tamaño del teclado
+        'one_time_keyboard' => false // El teclado no desaparece después de ser usado
+    ];
+    
     $data = [
         'chat_id' => $chat_id,
         'text' => $text,
-        'parse_mode' => 'Markdown' // Habilitamos el modo Markdown
+        'reply_markup' => json_encode($keyboard), // Se convierte el teclado a formato JSON
+        'parse_mode' => 'Markdown'
     ];
 
     // Enviar solicitud usando cURL
@@ -50,19 +62,19 @@ if ($input) {
         $first_name = $msgRecibido["message"]["from"]["first_name"];
         $text = strtolower(trim($msgRecibido["message"]["text"])); // Normaliza el texto recibido
 
-        // Respuesta a "hola" o "/start"
+        // Respuesta a "hola" o "/start" con teclado
         if ($text == "/start" || $text == "hola" || str_contains($text, "hola")) {
             $response = "Hola " . $first_name . ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
-            sendMessage($chat_id, $response);
+            sendMessageWithKeyboard($chat_id, $response); // Usamos el teclado
         }
-        
-        // Respuesta a "autor"
-        elseif ($text == "/autor") {
-            $response = "El creador de este bot es:\n\n" .
+
+        // Otras respuestas como "/autor"
+        elseif ($text == "/autor" || str_contains($text, "autor")) {
+            $response = "El creador de este bot es:\n" .
                         "**Autor:** Iván Alexander Carranza Sánchez.\n" . // Texto en negrita
                         "**Correo:** cs21024@ues.edu.sv\n" . // Texto en negrita
                         "**Tel:** +503 6193 4490\n"; // Texto en negrita
-            sendMessage($chat_id, $response);
+            sendMessage($chat_id, $response); // Aquí no enviamos teclado
         }
 
         // Respuesta a "adios", "/end" o "salu"
