@@ -72,7 +72,7 @@ if ($input) {
 
         
         // Respuesta a "/autor"
-        elseif (str_contains($text, "No tengo Internet")) {
+        elseif (str_contains($text, "1. No tengo Internet 🛜.")) {
             $response = "¿Tienes encendido tu router?";
             $keyboard =  [                
                 ['1. Si ✅',
