@@ -8,7 +8,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 header("Pragma: no-cache");
 header("Access-Control-Allow-Origin: *");
 
-// ----- FUNCIÓN: ENVIO DE MENSAJES A USUARIO. -----
+// ----- FUNCIÓN: ENVÍO DE MENSAJES A USUARIO. -----
 function sendMessage($chat_id, $text) {
     $bot_token = getenv('BOT_TOKEN_CS21024'); 
     
@@ -28,11 +28,17 @@ function sendMessage($chat_id, $text) {
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-    curl_exec($ch);
+    
+    // Ejecución y manejo de errores
+    $result = curl_exec($ch);
+    if ($result === false) {
+        error_log('Error en la solicitud cURL: ' . curl_error($ch));
+    }
+    
     curl_close($ch);
 }
 
-// CAPTURA DE INFORMACION DE CHAT
+// CAPTURA DE INFORMACIÓN DE CHAT
 $input = file_get_contents('php://input');
 if ($input) {
     $msgRecibido = json_decode($input, true);
@@ -41,15 +47,17 @@ if ($input) {
     if (isset($msgRecibido["message"])) {
         $chat_id = $msgRecibido["message"]["chat"]["id"];
         $first_name = $msgRecibido["message"]["from"]["first_name"];
-        $text = $msgRecibido["message"]["text"];
+        $text = strtolower(trim($msgRecibido["message"]["text"])); // Normaliza el texto recibido
 
-        if ($text == "/start" || strtolower($text) == "hola" || str_contains(strtolower($text), "hola")) {
+        // Respuesta a "hola" o "/start"
+        if ($text == "/start" || $text == "hola" || str_contains($text, "hola")) {
             $response = "Hola " . $first_name . ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
             sendMessage($chat_id, $response);
         }
 
-        if ($text == "/end" || strtolower($text) == "adios" || str_contains(strtolower($text), "adios") || str_contains(strtolower($text), "salu ")) {
-            $response = "Hola " . $first_name . ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
+        // Respuesta a "adios", "/end" o "salu"
+        elseif ($text == "/end" || $text == "adios" || str_contains($text, "adios") || str_contains($text, "salu")) {
+            $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
             sendMessage($chat_id, $response);
         }
     }
