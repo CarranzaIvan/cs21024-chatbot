@@ -9,7 +9,7 @@ header("Pragma: no-cache");
 header("Access-Control-Allow-Origin: *");
 
 // ----- FUNCIÓN: ENVÍO DE MENSAJES A USUARIO. -----
-function sendMessage($chat_id, $text, &$k='') {
+function sendMessage($chat_id, $text, $k = '') {
     $bot_token = getenv('BOT_TOKEN_CS21024'); 
     
     if (!$bot_token) {
@@ -19,16 +19,16 @@ function sendMessage($chat_id, $text, &$k='') {
 
     $url = "https://api.telegram.org/bot$bot_token/sendMessage";
 
-    // Validación de teclado
-    if (isset($k)) {
-        $url = $url."&reply_markup=".$k;
-    }
-
     $data = [
         'chat_id' => $chat_id,
         'text' => $text,
         'parse_mode' => 'Markdown' // Habilitamos el modo Markdown
     ];
+
+    // Validación de teclado
+    if (!empty($k)) {
+        $data['reply_markup'] = $k;
+    }
 
     // Enviar solicitud usando cURL
     $ch = curl_init();
@@ -61,10 +61,10 @@ if ($input) {
             $response = "Hola " . $first_name . ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
             $keyboard =  [
                 ['Opción 1 - Probando', 'Opción 2🐳', 'Opción 3'],
-            ]
-            $key = array('one_time_keyboard'=>true, 'resize_keyboard' => true, 'keyboard'=> $keyboard);
-            $k = json_encode($key)
-            sendMessage($chat_id, $response,$k);
+            ];
+            $key = ['one_time_keyboard' => true, 'resize_keyboard' => true, 'keyboard' => $keyboard];
+            $k = json_encode($key);
+            sendMessage($chat_id, $response, $k);
         }
         
         // Respuesta a "/autor"
@@ -78,7 +78,7 @@ if ($input) {
 
         // Respuesta a "adios", "/end" o "salu"
         elseif ($text == "/end" || $text == "adios" || str_contains($text, "adios") || str_contains($text, "salu")) {
-            $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡 .";
+            $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
             sendMessage($chat_id, $response);
         }
     }
