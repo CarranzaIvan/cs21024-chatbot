@@ -105,5 +105,27 @@ if ($input) {
             sendMessage($chat_id, $response);
         }
     }
+
+    if (isset($msgRecibido['callback_query'])) {
+        $chat_id = $msgRecibido['callback_query']['message']['chat']['id'];
+        $callback_data = $msgRecibido['callback_query']['data'];
+    
+        // Manejo de las diferentes respuestas del teclado inline
+        switch ($callback_data) {
+            case 'no_internet':
+                sendMessage($chat_id, "¿Tienes encendido tu router?");
+                break;
+            case 'fallas_internet':
+                sendMessage($chat_id, "Describe las fallas que estás experimentando.");
+                break;
+            case 'verificar_factura':
+                sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.");
+                break;
+            case 'salir':
+                sendMessage($chat_id, "Gracias por usar NetHelp. ¡Hasta luego!");
+                break;
+        }
+    }
+    
 }
 ?>
