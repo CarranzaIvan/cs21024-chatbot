@@ -70,7 +70,7 @@ if ($input) {
                     ['text' => '4. Salir', 'callback_data' => 'salir'],
                 ]
             ];
-            $key = ['one_time_keyboard' => true, 'resize_keyboard' => true, 'inline_keyboard' => $keyboard];
+            $key = ['inline_keyboard' => $keyboard];
             $k = json_encode($key);
             sendMessage($chat_id, $response, $k);
         }
@@ -78,9 +78,9 @@ if ($input) {
         // Respuesta a "/autor"
         elseif ($text == "/autor" || str_contains($text, "autor")) {
             $response = "El creador de este bot es:\n" .
-                        "**Autor:** Iván Alexander Carranza Sánchez.\n" . // Texto en negrita
-                        "**Correo:** cs21024@ues.edu.sv\n" . // Texto en negrita
-                        "**Tel:** +503 6193 4490\n"; // Texto en negrita
+                        "**Autor:** Iván Alexander Carranza Sánchez.\n" .
+                        "**Correo:** cs21024@ues.edu.sv\n" .
+                        "**Tel:** +503 6193 4490\n";
             sendMessage($chat_id, $response);
         }
 
@@ -93,32 +93,36 @@ if ($input) {
 
     if (isset($msgRecibido['callback_query'])) {
         $chat_id = $msgRecibido['callback_query']['message']['chat']['id'];
+        $callback_id = $msgRecibido['callback_query']['id'];  // Capturamos el ID de la consulta
         $callback_data = $msgRecibido['callback_query']['data'];
-    
+
+        // Respuesta vacía para eliminar el teclado inline
+        $clear_keyboard = json_encode([
+            'inline_keyboard' => []  // Esto elimina el teclado
+        ]);
+
+        // Notificar a Telegram que la acción fue recibida (para quitar el "cargando")
+        $url = "https://api.telegram.org/bot$bot_token/answerCallbackQuery";
+        $data = ['callback_query_id' => $callback_id];
+        file_get_contents($url . '?' . http_build_query($data));
+
         // Manejo de las diferentes respuestas del teclado inline
         switch ($callback_data) {
             case 'no_internet':
-                $keyboard =  [                
-                    ['1. Si ✅',
-                     '2. No ❌',  
-                     '3. Volver', 
-                     '4. Salir'],
-                ];
-                $key = ['one_time_keyboard' => true, 'resize_keyboard' => true, 'keyboard' => $keyboard];
-                $k = json_encode($key);
-                sendMessage($chat_id, $response, $k);
+                $response = "¿Tienes encendido tu router?";
+                sendMessage($chat_id, $response, $clear_keyboard);
                 break;
             case 'fallas_internet':
-                sendMessage($chat_id, "Describe las fallas que estás experimentando.");
+                sendMessage($chat_id, "Describe las fallas que estás experimentando.", $clear_keyboard);
                 break;
             case 'verificar_factura':
-                sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.");
+                sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.", $clear_keyboard);
                 break;
             case 'salir':
-                sendMessage($chat_id, "Gracias por usar NetHelp. ¡Hasta luego!");
+                $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
+                sendMessage($chat_id, $response, $clear_keyboard);
                 break;
         }
     }
-    
 }
 ?>
