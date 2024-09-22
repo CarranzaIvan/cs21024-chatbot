@@ -21,15 +21,15 @@ function sendPhoto($chat_id, $photoPath, $caption = '') {
 
     $data = [
         'chat_id' => $chat_id,
-        'caption' => $caption, // Opcional
-        'parse_mode' => 'Markdown' // Habilitamos el modo Markdown
+        'caption' => $caption,
+        'parse_mode' => 'Markdown'
     ];
 
-    // Usamos CURLFile para enviar un archivo local
     if (file_exists($photoPath)) {
         $data['photo'] = new CURLFile($photoPath);
     } else {
         error_log("La imagen no se encontró en la ruta especificada: $photoPath");
+        sendMessage($chat_id, "Lo siento, no se pudo encontrar la imagen solicitada.", json_encode(['inline_keyboard' => []]));
         return;
     }
 
@@ -39,10 +39,14 @@ function sendPhoto($chat_id, $photoPath, $caption = '') {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     
-    // Ejecución y manejo de errores
     $result = curl_exec($ch);
     if ($result === false) {
         error_log('Error en la solicitud cURL: ' . curl_error($ch));
+    } else {
+        $response = json_decode($result, true);
+        if (!$response['ok']) {
+            error_log('Error al enviar la foto: ' . $response['description']);
+        }
     }
     
     curl_close($ch);
@@ -62,24 +66,26 @@ function sendMessage($chat_id, $text, $k = '') {
     $data = [
         'chat_id' => $chat_id,
         'text' => $text,
-        'parse_mode' => 'Markdown' // Habilitamos el modo Markdown
+        'parse_mode' => 'Markdown'
     ];
 
-    // Validación de teclado
     if (!empty($k)) {
         $data['reply_markup'] = $k;
     }
 
-    // Enviar solicitud usando cURL
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
     
-    // Ejecución y manejo de errores
     $result = curl_exec($ch);
     if ($result === false) {
         error_log('Error en la solicitud cURL: ' . curl_error($ch));
+    } else {
+        $response = json_decode($result, true);
+        if (!$response['ok']) {
+            error_log('Error al enviar el mensaje: ' . $response['description']);
+        }
     }
     
     curl_close($ch);
@@ -90,16 +96,14 @@ $input = file_get_contents('php://input');
 if ($input) {
     $msgRecibido = json_decode($input, true);
 
-    // CAPTURA DE MENSAJES ESCRITOR - INICIALES
     if (isset($msgRecibido["message"])) {
         $chat_id = $msgRecibido["message"]["chat"]["id"];
         $first_name = $msgRecibido["message"]["from"]["first_name"];
-        $text = strtolower(trim($msgRecibido["message"]["text"])); // Normaliza el texto recibido
+        $text = strtolower(trim($msgRecibido["message"]["text"]));
 
         // Respuesta a "hola" o "/start"
-        if ($text == "/start" || $text == "hola" || str_contains($text, "hola")) {
+        if ($text == "/start" || $text == "hola" || (strpos($text, "hola") !== false)) {
             $response = "Hola " . $first_name . ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
-            // Creación de teclado inline
             $keyboard = [
                 [
                     ['text' => '1. No tengo Internet 🛜', 'callback_data' => 'no_internet'],
@@ -110,15 +114,13 @@ if ($input) {
                     ['text' => '4. Salir', 'callback_data' => 'salir'],
                 ]
             ];
-            $key = ['inline_keyboard' => $keyboard];
-            $k = json_encode($key);
+            $k = json_encode(['inline_keyboard' => $keyboard]);
             sendMessage($chat_id, $response, $k);
         }
 
         // Respuesta a "/humano"
-        elseif ($text == "/humano" || str_contains($text, "humano")) {
+        elseif ($text == "/humano" || (strpos($text, "humano") !== false)) {
             $response = "¿Puedes seleccionar la compañia la cual te esta proporcionando servicios de Internet?";
-            // Creación de teclado inline
             $keyboard = [
                 [
                     ['text' => '1. Claro 🔴', 'callback_data' => 'claro'],
@@ -126,20 +128,19 @@ if ($input) {
                 ],
                 [
                     ['text' => '3. Tigo 🔵', 'callback_data' => 'tigo'],
-                    ['text' => '4. Digicel ⚪', 'callback_data' => 'movistar'],
+                    ['text' => '4. Digicel ⚪', 'callback_data' => 'digicel'],
                 ],
                 [
                     ['text' => 'Volver', 'callback_data' => 'volver'],
                     ['text' => 'Salir', 'callback_data' => 'salir'],
                 ]
             ];
-            $key = ['inline_keyboard' => $keyboard];
-            $k = json_encode($key);
+            $k = json_encode(['inline_keyboard' => $keyboard]);
             sendMessage($chat_id, $response, $k);
         }
 
         // Respuesta a "/autor"
-        elseif ($text == "/autor" || str_contains($text, "autor")) {
+        elseif ($text == "/autor" || (strpos($text, "autor") !== false)) {
             $response = "El creador de este bot es:\n" .
                         "**Autor:** Iván Alexander Carranza Sánchez.\n" .
                         "**Correo:** cs21024@ues.edu.sv\n" .
@@ -148,7 +149,7 @@ if ($input) {
         }
 
         // Respuesta a "adios", "/end" o "salu"
-        elseif ($text == "/end" || $text == "adios" || str_contains($text, "salir") || str_contains($text, "adios") || str_contains($text, "salu")) {
+        elseif ($text == "/end" || $text == "adios" || (strpos($text, "salir") !== false) || (strpos($text, "adios") !== false) || (strpos($text, "salu") !== false)) {
             $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
             sendMessage($chat_id, $response);
         }
@@ -156,17 +157,15 @@ if ($input) {
 
     // CAPTURA DE MENSAJES SELECCIONABLES
     if (isset($msgRecibido['callback_query'])) {
-        $bot_token = getenv('BOT_TOKEN_CS21024'); // Obtén el token aquí para usarlo luego
-
         $chat_id = $msgRecibido['callback_query']['message']['chat']['id'];
         $first_name = $msgRecibido['callback_query']['message']["first_name"];
-        $callback_id = $msgRecibido['callback_query']['id'];  // Capturamos el ID de la consulta
+        $callback_id = $msgRecibido['callback_query']['id'];
         $callback_data = $msgRecibido['callback_query']['data'];
 
         // Respuesta vacía para eliminar el teclado inline
         $clear_keyboard = json_encode(['inline_keyboard' => []]);
 
-        // Notificar a Telegram que la acción fue recibida (para quitar el "cargando")
+        // Notificar a Telegram que la acción fue recibida
         $url = "https://api.telegram.org/bot$bot_token/answerCallbackQuery";
         $data = ['callback_query_id' => $callback_id];
         file_get_contents($url . '?' . http_build_query($data));
@@ -175,7 +174,6 @@ if ($input) {
         switch ($callback_data) {
             case 'no_internet':
                 $response = "¿Tienes encendido tu router?";
-                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
                 $keyboard = [
                     [
                         ['text' => 'Sí ✅', 'callback_data' => 'router_on'],
@@ -186,9 +184,8 @@ if ($input) {
                         ['text' => 'Salir', 'callback_data' => 'salir'],
                     ]
                 ];
-                $key = ['inline_keyboard' => $keyboard];
-                $k = json_encode($key);
-                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
+                $k = json_encode(['inline_keyboard' => $keyboard]);
+                sendMessage($chat_id, $response, $k);
                 break;
             case 'fallas_internet':
                 sendMessage($chat_id, "Describe las fallas que estás experimentando.", $clear_keyboard);
@@ -207,7 +204,6 @@ if ($input) {
                 sendMessage($chat_id, "Por favor, enciende tu router y verifica de nuevo.", $clear_keyboard);
                 break;
             case 'volver':
-                // Regresar al teclado anterior
                 $response = "Hola, " . $first_name . " ¿cómo puedo ayudarte en esta ocasión?";
                 $keyboard = [
                     [
@@ -219,32 +215,9 @@ if ($input) {
                         ['text' => '4. Salir', 'callback_data' => 'salir'],
                     ]
                 ];
-                $key = ['inline_keyboard' => $keyboard];
-                $k = json_encode($key);
-                sendMessage($chat_id, $response, $k); // Regresar al teclado anterior
+                $k = json_encode(['inline_keyboard' => $keyboard]);
+                sendMessage($chat_id, $response, $k);
                 break;
-
-            // Agregamos atencion a internet
-            case 'claro':
-                $photo = "./Recursos/logo_Claro.png"; // Asegúrate de que esta ruta es correcta
-                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Claro. Por favor, llama al +503 2250 5555.";
-                sendPhoto($chat_id, $photo, $caption);
-                break;
-            case 'tigo':
-                $photo = "./Recursos/logo_Tigo.png"; // Asegúrate de que esta ruta es correcta
-                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Tigo. Por favor, llama al +503 2207 4000.";
-                sendPhoto($chat_id, $photo, $caption);
-                break;
-            case 'movistar':
-                $photo = "./Recursos/logo_Movistar.png"; // Asegúrate de que esta ruta es correcta
-                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Telefonica. Por favor, llama al +503 7119-7119.";
-                sendPhoto($chat_id, $photo, $caption);
-                break; 
-            case 'digicel':
-                $photo = "./Recursos/logo_Digicel.png"; // Asegúrate de que esta ruta es correcta
-                $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Digicel. Por favor, llama al +503 2504-3444.";
-                sendPhoto($chat_id, $photo, $caption);
-                break; 
         }
     }
 }
