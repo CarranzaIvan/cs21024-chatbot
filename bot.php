@@ -112,13 +112,14 @@ if ($input) {
         switch ($callback_data) {
             case 'no_internet':
                 $response = "¿Tienes encendido tu router?";
-                // Crear un nuevo teclado con opciones "Sí", "No" y "Salir"
+                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
                 $keyboard = [
                     [
                         ['text' => 'Sí', 'callback_data' => 'router_on'],
                         ['text' => 'No', 'callback_data' => 'router_off'],
                     ],
                     [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
                         ['text' => 'Salir', 'callback_data' => 'salir'],
                     ]
                 ];
@@ -141,6 +142,23 @@ if ($input) {
                 break;
             case 'router_off':
                 sendMessage($chat_id, "Por favor, enciende tu router y verifica de nuevo.", $clear_keyboard);
+                break;
+            case 'volver':
+                // Regresar al teclado anterior
+                $response = "Hola, " . $first_name . ", ¿cómo puedo ayudarte en esta ocasión?";
+                $keyboard = [
+                    [
+                        ['text' => '1. No tengo Internet 🛜', 'callback_data' => 'no_internet'],
+                        ['text' => '2. Fallas con el Internet ⚡', 'callback_data' => 'fallas_internet'],
+                    ],
+                    [
+                        ['text' => '3. Verificar Factura 💸', 'callback_data' => 'verificar_factura'],
+                        ['text' => '4. Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Regresar al teclado anterior
                 break;
         }
     }
