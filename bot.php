@@ -59,8 +59,11 @@ if ($input) {
         // Respuesta a "hola" o "/start"
         if ($text == "/start" || $text == "hola" || str_contains($text, "hola")) {
             $response = "Hola " . $first_name . ", soy NetHelp. ¿Cómo puedo ayudarte en esta ocasión?";
-            $keyboard =  [
-                ['Opción 1 - Probando', 'Opción 2🐳', 'Opción 3'],
+            $keyboard =  [                
+                ['1. No tengo Internet.',
+                 '2. Fallas con el internet',  
+                 '3. Verificar pago.', 
+                 '4. Salir'],
             ];
             $key = ['one_time_keyboard' => true, 'resize_keyboard' => true, 'keyboard' => $keyboard];
             $k = json_encode($key);
@@ -77,8 +80,8 @@ if ($input) {
         }
 
         // Respuesta a "adios", "/end" o "salu"
-        elseif ($text == "/end" || $text == "adios" || str_contains($text, "adios") || str_contains($text, "salu")) {
-            $response = "Un gusto ayudarte, estamos a la orden para ayudarte 🫡.";
+        elseif ($text == "/end" || $text == "adios" || str_contains($text, "salir") || str_contains($text, "adios") || str_contains($text, "salu")) {
+            $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
             sendMessage($chat_id, $response);
         }
     }
