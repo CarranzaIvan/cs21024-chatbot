@@ -1,6 +1,6 @@
 <?php
 // ----- EVITAMOS ERRORES EN PRODUCCIÓN. -----
-error_reporting(0);
+error_reporting(E_ALL & ~E_NOTICE);
 
 // ----- EVITAMOS CACHE -----
 header("Cache-Control: no-cache, must-revalidate");
@@ -9,7 +9,7 @@ header("Pragma: no-cache");
 header("Access-Control-Allow-Origin: *");
 
 // ----- FUNCIÓN: ENVÍO DE MENSAJES A USUARIO. -----
-function sendMessage($chat_id, $text, $k = '') {
+function sendMessage($chat_id, $text, $k = '', $remove_keyboard = false) {
     $bot_token = getenv('BOT_TOKEN_CS21024'); 
     
     if (!$bot_token) {
@@ -25,9 +25,16 @@ function sendMessage($chat_id, $text, $k = '') {
         'parse_mode' => 'Markdown' // Habilitamos el modo Markdown
     ];
 
-    // Validación de teclado
+    // Validación de teclado inline
     if (!empty($k)) {
         $data['reply_markup'] = $k;
+    }
+
+    // Deshabilitar el teclado normal
+    if ($remove_keyboard) {
+        $data['reply_markup'] = json_encode([
+            'remove_keyboard' => true
+        ]);
     }
 
     // Enviar solicitud usando cURL
@@ -72,7 +79,9 @@ if ($input) {
             ];
             $key = ['inline_keyboard' => $keyboard];
             $k = json_encode($key);
-            sendMessage($chat_id, $response, $k);
+            
+            // Enviar mensaje con teclado inline y deshabilitar teclado normal
+            sendMessage($chat_id, $response, $k, true);
         }
         
         // Respuesta a "/autor"
@@ -81,24 +90,26 @@ if ($input) {
                         "**Autor:** Iván Alexander Carranza Sánchez.\n" .
                         "**Correo:** cs21024@ues.edu.sv\n" .
                         "**Tel:** +503 6193 4490\n";
-            sendMessage($chat_id, $response);
+            sendMessage($chat_id, $response, '', true);
         }
 
         // Respuesta a "adios", "/end" o "salu"
         elseif ($text == "/end" || $text == "adios" || str_contains($text, "salir") || str_contains($text, "adios") || str_contains($text, "salu")) {
             $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
-            sendMessage($chat_id, $response);
+            sendMessage($chat_id, $response, '', true);
         }
     }
 
     if (isset($msgRecibido['callback_query'])) {
+        $bot_token = getenv('BOT_TOKEN_CS21024'); // Obtén el token aquí para usarlo luego
+
         $chat_id = $msgRecibido['callback_query']['message']['chat']['id'];
         $callback_id = $msgRecibido['callback_query']['id'];  // Capturamos el ID de la consulta
         $callback_data = $msgRecibido['callback_query']['data'];
 
         // Respuesta vacía para eliminar el teclado inline
         $clear_keyboard = json_encode([
-            'inline_keyboard' => []  // Esto elimina el teclado
+            'inline_keyboard' => []  // Esto elimina el teclado inline
         ]);
 
         // Notificar a Telegram que la acción fue recibida (para quitar el "cargando")
@@ -110,17 +121,17 @@ if ($input) {
         switch ($callback_data) {
             case 'no_internet':
                 $response = "¿Tienes encendido tu router?";
-                sendMessage($chat_id, $response, $clear_keyboard);
+                sendMessage($chat_id, $response, $clear_keyboard, true); // Remover el teclado
                 break;
             case 'fallas_internet':
-                sendMessage($chat_id, "Describe las fallas que estás experimentando.", $clear_keyboard);
+                sendMessage($chat_id, "Describe las fallas que estás experimentando.", $clear_keyboard, true);
                 break;
             case 'verificar_factura':
-                sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.", $clear_keyboard);
+                sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.", $clear_keyboard, true);
                 break;
             case 'salir':
                 $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
-                sendMessage($chat_id, $response, $clear_keyboard);
+                sendMessage($chat_id, $response, $clear_keyboard, true);
                 break;
         }
     }
