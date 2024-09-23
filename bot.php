@@ -93,7 +93,7 @@ if ($input) {
     // CAPTURA DE MENSAJES ESCRITOR - INICIALES
     if (isset($msgRecibido["message"])) {
         $chat_id = $msgRecibido["message"]["chat"]["id"];
-        $first_name = $msgRecibido["message"]["from"]["first_name"];
+        $first_name = $msgRecibido["message"]["chat"]["first_name"];
         $text = strtolower(trim($msgRecibido["message"]["text"])); // Normaliza el texto recibido
 
         // Respuesta a "hola" o "/start"
@@ -103,7 +103,7 @@ if ($input) {
             $keyboard = [
                 [
                     ['text' => '1. No tengo Internet 🛜', 'callback_data' => 'no_internet'],
-                    ['text' => '2. Servicio humano ⚡', 'callback_data' => 'servicio_humano'],
+                    ['text' => '2. Servicio humano 🙋🏼', 'callback_data' => 'servicio_humano'],
                 ],
                 [
                     ['text' => '3. Verificar Factura 💸', 'callback_data' => 'verificar_factura'],
@@ -416,7 +416,7 @@ if ($input) {
                 $keyboard = [
                     [
                         ['text' => '1. No tengo Internet 🛜', 'callback_data' => 'no_internet'],
-                        ['text' => '2. Fallas con el Internet ⚡', 'callback_data' => 'fallas_internet'],
+                        ['text' => '2. Servicio humano 🙋🏼', 'callback_data' => 'servicio_humano'],
                     ],
                     [
                         ['text' => '3. Verificar Factura 💸', 'callback_data' => 'verificar_factura'],
