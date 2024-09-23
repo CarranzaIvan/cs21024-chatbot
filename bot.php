@@ -107,7 +107,8 @@ if ($input) {
                 ],
                 [
                     ['text' => '3. Verificar Factura 💸', 'callback_data' => 'verificar_factura'],
-                    ['text' => '4. Mi IP', 'callback_data' => 'my_IP'],
+                    ['text' => '3. Horarios de atención ⌚', 'callback_data' => 'horarios_atencion'],
+
                 ],
                 [
                     ['text' => '5. Salir', 'callback_data' => 'salir'],
@@ -178,23 +179,6 @@ if ($input) {
 
         // Manejo de las diferentes respuestas del teclado inline
         switch ($callback_data) {
-            case 'my_IP':
-                $response = "¿Tienes encendido tu router?";
-                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
-                $keyboard = [
-                    [
-                        ['text' => 'Sí ✅', 'callback_data' => 'router_on'],
-                        ['text' => 'No ❌', 'callback_data' => 'router_off'],
-                    ],
-                    [
-                        ['text' => 'Volver', 'callback_data' => 'volver'],
-                        ['text' => 'Salir', 'callback_data' => 'salir'],
-                    ]
-                ];
-                $key = ['inline_keyboard' => $keyboard];
-                $k = json_encode($key);
-                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
-                break; 
             case 'no_internet':
                 $response = "¿Tienes encendido tu router?";
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
@@ -410,6 +394,28 @@ if ($input) {
                 $k = json_encode($key);
                 sendMessage($chat_id, $response, $k);
                 break;
+            case 'horarios_atencion':
+                // Redirige a la lógica de la respuesta a "/humano"
+                $response = "¿Cúal es tu compañia?";
+                // Creación de teclado inline
+                $keyboard = [
+                    [
+                        ['text' => '1. Claro 🔴', 'callback_data' => 'claro_atencion'],
+                        ['text' => '2. Movistar Ⓜ', 'callback_data' => 'movistar_atencion'],
+                    ],
+                    [
+                        ['text' => '3. Tigo 🔵', 'callback_data' => 'tigo_atencion'],
+                        ['text' => '4. Digicel ⚪', 'callback_data' => 'digicel_atencion'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                        ['text' => 'Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k);
+                break;
             case 'volver':
                 // Regresar al teclado anterior
                 $response = "Hola, " . $first_name . " ¿Cómo puedo ayudarte en esta ocasión?";
@@ -420,7 +426,11 @@ if ($input) {
                     ],
                     [
                         ['text' => '3. Verificar Factura 💸', 'callback_data' => 'verificar_factura'],
-                        ['text' => '4. Salir', 'callback_data' => 'salir'],
+                        ['text' => '3. Horarios de atención ⌚', 'callback_data' => 'horarios_atencion'],
+    
+                    ],
+                    [
+                        ['text' => '5. Salir', 'callback_data' => 'salir'],
                     ]
                 ];
                 $key = ['inline_keyboard' => $keyboard];
@@ -433,21 +443,37 @@ if ($input) {
                 $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Claro. Por favor, llama al +503 2250 5555.";
                 sendPhoto($chat_id, $photo, $caption);
                 break;
+            case 'claro_atencion':
+                $horarios = "Lunes a Sábado: de 10:00a.m a 7:00p.m. Domingo: de 10:00a.m. a 5:00p.m.";
+                sendMessage($chat_id, $horarios, $clear_keyboard);
+                break;
             case 'tigo':
                 $photo = "./Recursos/logo_Tigo.png"; // Asegúrate de que esta ruta es correcta
                 $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Tigo. Por favor, llama al +503 2207 4000.";
                 sendPhoto($chat_id, $photo, $caption);
+                break;
+            case 'tigo_atencion':
+                $horarios = "Lun-Sab de 9:00 a 19:00 hrs.";
+                sendMessage($chat_id, $horarios, $clear_keyboard);
                 break;
             case 'movistar':
                 $photo = "./Recursos/logo_Movistar.png"; // Asegúrate de que esta ruta es correcta
                 $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Telefonica. Por favor, llama al +503 7119-7119.";
                 sendPhoto($chat_id, $photo, $caption);
                 break; 
+            case 'movistar_atencion':
+                $horarios = "Lunes a viernes 8:00 AM a 5:00 PM | Sábado 8:00 AM a 3:00 PM";
+                sendMessage($chat_id, $horarios, $clear_keyboard);
+                break;
             case 'digicel':
                 $photo = "./Recursos/logo_Digicel.png"; // Asegúrate de que esta ruta es correcta
                 $caption = "Para una atención personalizada, te invitamos a comunicarte con nuestro equipo de soporte al cliente Digicel. Por favor, llama al +503 2504-3444.";
                 sendPhoto($chat_id, $photo, $caption);
                 break; 
+            case 'digicel_atencion':
+                $horarios = "Lunes a sábado: 9:00 a. m. a 7:00 p. m. Domingo: 10:00 a.m. a 5:00 p. m.";
+                sendMessage($chat_id, $horarios, $clear_keyboard);
+                break;
         }
     }
 }
