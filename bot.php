@@ -152,7 +152,9 @@ if ($input) {
 
         // Respuesta a "adios", "/end" o "salu"
         elseif ($text == "/end" || $text == "adios" || str_contains($text, "salir") || str_contains($text, "adios") || str_contains($text, "salu")) {
-            $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
+            $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.\n".
+            "Puedes hacernos el favor de llenar nuestra encuesta de satisfacción:\n".
+            "https://forms.gle/2UEkD5o8wfyp1HQN6";
             sendMessage($chat_id, $response);
         }
     }
@@ -235,7 +237,9 @@ if ($input) {
                 sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.", $clear_keyboard);
                 break;
             case 'salir':
-                $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.";
+                $response = "Un gusto ayudarte, estamos a la orden para ayudarte 👋.\n".
+                "Puedes hacernos el favor de llenar nuestra encuesta de satisfacción:\n".
+                "https://forms.gle/2UEkD5o8wfyp1HQN6";
                 sendMessage($chat_id, $response, $clear_keyboard);
                 break;
             case 'router_on':
