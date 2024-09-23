@@ -348,7 +348,7 @@ if ($input) {
             case 'next_wifi':
                 // Redirige a la lógica de la respuesta a "/humano"
                 $response = "Parece que tu situación es un poco compleja. Te recomiendo que hables con alguien de fuera para obtener una mejor perspectiva y asesoría.\n".
-                ."¿Puedes seleccionar la compañia la cual te esta proporcionando servicios de Internet?";
+                "¿Puedes seleccionar la compañia la cual te esta proporcionando servicios de Internet?";
                 // Creación de teclado inline
                 $keyboard = [
                     [
