@@ -103,11 +103,14 @@ if ($input) {
             $keyboard = [
                 [
                     ['text' => '1. No tengo Internet 🛜', 'callback_data' => 'no_internet'],
-                    ['text' => '2. Fallas con el Internet ⚡', 'callback_data' => 'fallas_internet'],
+                    ['text' => '2. Servicio humano ⚡', 'callback_data' => 'servicio_humano'],
                 ],
                 [
                     ['text' => '3. Verificar Factura 💸', 'callback_data' => 'verificar_factura'],
-                    ['text' => '4. Salir', 'callback_data' => 'salir'],
+                    ['text' => '4. Mi IP', 'callback_data' => 'my_IP'],
+                ],
+                [
+                    ['text' => '5. Salir', 'callback_data' => 'salir'],
                 ]
             ];
             $key = ['inline_keyboard' => $keyboard];
@@ -173,6 +176,23 @@ if ($input) {
 
         // Manejo de las diferentes respuestas del teclado inline
         switch ($callback_data) {
+            case 'my_IP':
+                $response = "¿Tienes encendido tu router?";
+                // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
+                $keyboard = [
+                    [
+                        ['text' => 'Sí ✅', 'callback_data' => 'router_on'],
+                        ['text' => 'No ❌', 'callback_data' => 'router_off'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                        ['text' => 'Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
+                break; 
             case 'no_internet':
                 $response = "¿Tienes encendido tu router?";
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
@@ -190,8 +210,26 @@ if ($input) {
                 $k = json_encode($key);
                 sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
-            case 'fallas_internet':
-                sendMessage($chat_id, "Describe las fallas que estás experimentando.", $clear_keyboard);
+            case 'servicio_humano':
+                $response = "¿Puedes seleccionar la compañia la cual te esta proporcionando servicios de Internet?";
+                // Creación de teclado inline
+                $keyboard = [
+                    [
+                        ['text' => '1. Claro 🔴', 'callback_data' => 'claro'],
+                        ['text' => '2. Movistar Ⓜ', 'callback_data' => 'movistar'],
+                    ],
+                    [
+                        ['text' => '3. Tigo 🔵', 'callback_data' => 'tigo'],
+                        ['text' => '4. Digicel ⚪', 'callback_data' => 'digicel'],
+                    ],
+                    [
+                        ['text' => 'Volver', 'callback_data' => 'volver'],
+                        ['text' => 'Salir', 'callback_data' => 'salir'],
+                    ]
+                ];
+                $key = ['inline_keyboard' => $keyboard];
+                $k = json_encode($key);
+                sendMessage($chat_id, $response, $k);
                 break;
             case 'verificar_factura':
                 sendMessage($chat_id, "Puedes verificar tu factura en la página web del proveedor.", $clear_keyboard);
@@ -321,13 +359,13 @@ if ($input) {
                 break;
             case 'computadora_wifi':
                 $photo = "./Recursos/wifi-computadora.png"; // Asegúrate de que esta ruta es correcta
-                $indicaciones = "Enciende tu computadora y accede a tu cuenta.".
-                "1. Haz clic en el icono de red en la esquina inferior derecha de la barra de tareas.".
-                "2. Asegúrate de que el Wi-Fi esté activado (puedes ver un icono de Wi-Fi).".
-                "3. Si el Wi-Fi está apagado, haz clic en \"Activar Wi-Fi\".".
-                "4. Busca las redes disponibles y selecciona tu red Wi-Fi.".
-                "5. Haz clic en \"Conectar\".".
-                "6. Ingresa la contraseña de la red, si es necesario.".
+                $indicaciones = "Enciende tu computadora y accede a tu cuenta.\n".
+                "1. Haz clic en el icono de red en la esquina inferior derecha de la barra de tareas.\n".
+                "2. Asegúrate de que el Wi-Fi esté activado (puedes ver un icono de Wi-Fi).\n".
+                "3. Si el Wi-Fi está apagado, haz clic en \"Activar Wi-Fi\".\n".
+                "4. Busca las redes disponibles y selecciona tu red Wi-Fi.\n".
+                "5. Haz clic en \"Conectar\".\n".
+                "6. Ingresa la contraseña de la red, si es necesario.\n".
                 "7. Confirma la conexión y verifica que esté conectado (deberías ver el icono de Wi-Fi en la barra de tareas).";
                 sendPhoto($chat_id, $photo, $indicaciones);
                 $response = "¿Tu problema ha sido solucionado?";
