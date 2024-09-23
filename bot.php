@@ -320,15 +320,15 @@ if ($input) {
                 sendMessage($chat_id, $response, $k); // Enviar mensaje con nuevo teclado
                 break;
             case 'computadora_wifi':
-                $photo = "./Recursos/wifi-computadora.jpg"; // Asegúrate de que esta ruta es correcta
-                $indicaciones = "Enciende tu computadora y accede a tu cuenta.
-                1. Haz clic en el icono de red en la esquina inferior derecha de la barra de tareas.
-                2. Asegúrate de que el Wi-Fi esté activado (puedes ver un icono de Wi-Fi).
-                3. Si el Wi-Fi está apagado, haz clic en \"Activar Wi-Fi\".
-                4. Busca las redes disponibles y selecciona tu red Wi-Fi.
-                5. Haz clic en \"Conectar\".
-                6. Ingresa la contraseña de la red, si es necesario.
-                7. Confirma la conexión y verifica que esté conectado (deberías ver el icono de Wi-Fi en la barra de tareas).";
+                $photo = "./Recursos/wifi-computadora.png"; // Asegúrate de que esta ruta es correcta
+                $indicaciones = "Enciende tu computadora y accede a tu cuenta.".
+                "1. Haz clic en el icono de red en la esquina inferior derecha de la barra de tareas.".
+                "2. Asegúrate de que el Wi-Fi esté activado (puedes ver un icono de Wi-Fi).".
+                "3. Si el Wi-Fi está apagado, haz clic en \"Activar Wi-Fi\".".
+                "4. Busca las redes disponibles y selecciona tu red Wi-Fi.".
+                "5. Haz clic en \"Conectar\".".
+                "6. Ingresa la contraseña de la red, si es necesario.".
+                "7. Confirma la conexión y verifica que esté conectado (deberías ver el icono de Wi-Fi en la barra de tareas).";
                 sendPhoto($chat_id, $photo, $indicaciones);
                 $response = "¿Tu problema ha sido solucionado?";
                 // Crear un nuevo teclado con opciones "Sí", "No", "Volver" y "Salir"
